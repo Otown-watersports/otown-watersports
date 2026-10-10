@@ -6,15 +6,18 @@
  *  1. checks the submission (required fields, ages, initials, signature, size),
  *  2. stamps an audit record (server time, IP, device, SHA-256 of the PDF),
  *  3. saves the PDF + record to R2 (bucket "otown-waivers", auto-deleted after 3 years by a lifecycle rule),
- *  4. emails the PDF to O'Town (and a copy to the signer) through Resend.
+ *  4. saves it to the owner's Google Drive and emails it to O'Town (and a copy to the signer) from the
+ *     connected Gmail account (see google.ts). Resend is supported as an alternative sender.
  * A waiver counts as received only if it was stored or emailed to O'Town.
  */
 
-export interface Env {
+import { cleanupDrive, driveUpload, getConfig, gmailSend, handleGoogle, type GoogleEnv } from "./google";
+
+export interface Env extends GoogleEnv {
   ASSETS: Fetcher;
   WAIVERS?: R2Bucket;
-  RESEND_API_KEY?: string;
-  WAIVER_TO?: string;
+  RESEND_API_KEY?: string; // optional fallback sender
+  WAIVER_TO?: string; // defaults to the connected Google account
   WAIVER_FROM?: string;
 }
 
@@ -108,10 +111,11 @@ async function sendEmail(env: Env, to: string, subject: string, html: string, fi
 }
 
 async function handleWaiver(req: Request, env: Env): Promise<Response> {
+  const google = env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET ? await getConfig(env) : null;
   // The form goes live once email is connected (storage alone would leave O'Town without a notification)
-  if (req.method === "GET") return json({ ready: Boolean(env.RESEND_API_KEY) });
+  if (req.method === "GET") return json({ ready: Boolean(google || env.RESEND_API_KEY) });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
-  if (!env.RESEND_API_KEY) return json({ error: "Online signing isn't switched on yet. Please download and print the waiver." }, 503);
+  if (!google && !env.RESEND_API_KEY) return json({ error: "Online signing isn't switched on yet. Please download and print the waiver." }, 503);
 
   let form: FormData;
   try { form = await req.formData(); } catch { return json({ error: "Invalid form." }, 400); }
@@ -142,7 +146,7 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
   const base = `waivers/${day.slice(0, 4)}/${day.slice(5, 7)}/${day}_${slug(s.signer.name)}_${id}`;
   const filename = `OTown-Waiver_${day}_${slug(s.signer.name)}.pdf`;
 
-  let stored = false, emailed = false;
+  let stored = false, emailed = false, drive = false;
   if (env.WAIVERS) {
     try {
       await env.WAIVERS.put(`${base}.pdf`, pdfBuf, { httpMetadata: { contentType: "application/pdf" }, customMetadata: { name: s.signer.name, kind: s.kind, sha256: hash } });
@@ -150,8 +154,12 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
       stored = true;
     } catch { /* fall through to email */ }
   }
-  if (env.RESEND_API_KEY) {
-    const b64 = toBase64(pdfBuf);
+  const b64 = toBase64(pdfBuf);
+  const owner = env.WAIVER_TO || google?.email || "info@otownwatersports.com";
+  if (google) {
+    drive = await driveUpload(env, google, filename, pdfBuf, `${who} · signed ${now.toISOString()} · SHA-256 ${hash}`).catch(() => false);
+  }
+  if (google || env.RESEND_API_KEY) {
     const rows: [string, string][] = [
       ["Rider(s)", who],
       ["Type", s.kind === "adult" ? "Adult (18+)" : s.kind === "minor" ? "Minor(s), signed by guardian" : "Adult + minor(s)"],
@@ -166,14 +174,17 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
       ["Waiver ID", id],
     ];
     const table = `<table cellpadding="6" style="border-collapse:collapse;font:14px/1.4 Arial,sans-serif">${rows.map(([k, val]) => `<tr><td style="color:#667;vertical-align:top">${esc(k)}</td><td><b>${esc(val)}</b></td></tr>`).join("")}</table>`;
-    emailed = await sendEmail(env, env.WAIVER_TO || "info@otownwatersports.com", `Signed waiver: ${who}`,
-      `<p style="font:15px Arial,sans-serif">A new waiver was signed online. The signed PDF is attached${stored ? " and saved in Cloudflare" : ""}.</p>${table}`,
-      filename, b64, s.signer.email).catch(() => false);
-    await sendEmail(env, s.signer.email, "Your signed O'Town Watersports waiver",
-      `<p style="font:15px/1.5 Arial,sans-serif">Thanks, ${esc(s.signer.name.split(" ")[0])}. Your signed waiver is attached for your records. See you on the water.<br><br>O'Town Watersports · Lake Barton, Orlando</p>`,
-      filename, b64).catch(() => false);
+    const saved = [stored && "Cloudflare", drive && "Google Drive"].filter(Boolean).join(" and ");
+    const ownerHtml = `<p style="font:15px Arial,sans-serif">A new waiver was signed online. The signed PDF is attached${saved ? ` and saved in ${saved}` : ""}.</p>${table}`;
+    const riderHtml = `<p style="font:15px/1.5 Arial,sans-serif">Thanks, ${esc(s.signer.name.split(" ")[0])}. Your signed waiver is attached for your records. See you on the water.<br><br>O'Town Watersports · Lake Barton, Orlando</p>`;
+    const send = (to: string, subject: string, html: string, replyTo?: string) =>
+      google
+        ? gmailSend(env, google, { to, replyTo, subject, html, filename, pdfB64: b64 })
+        : sendEmail(env, to, subject, html, filename, b64, replyTo);
+    emailed = await send(owner, `Signed waiver: ${who}`, ownerHtml, s.signer.email).catch(() => false);
+    await send(s.signer.email, "Your signed O'Town Watersports waiver", riderHtml).catch(() => false);
   }
-  if (!stored && !emailed) return json({ error: "We couldn't save your waiver. Please try again, or download and print it." }, 502);
+  if (!stored && !emailed && !drive) return json({ error: "We couldn't save your waiver. Please try again, or download and print it." }, 502);
   return json({ ok: true, id, filename });
 }
 
@@ -181,6 +192,11 @@ export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
     if (url.pathname === "/api/waiver") return handleWaiver(req, env);
+    if (url.pathname.startsWith("/api/google/")) return handleGoogle(req, env);
     return env.ASSETS.fetch(req);
+  },
+  // monthly: remove Drive copies older than 3 years
+  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(cleanupDrive(env));
   },
 } satisfies ExportedHandler<Env>;

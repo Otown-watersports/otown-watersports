@@ -722,7 +722,7 @@ a:hover > .flip .flip__b, a:focus-visible > .flip .flip__b { transform: translat
 .wv-list li { margin: 3px 0; padding-left: 6px; }
 .wv-blank { display: inline-block; border-bottom: 1px solid #111; vertical-align: baseline; }
 .wv-blank--init { width: 44px; margin-left: 2px; }
-.wv-notice { font-size: 20px; line-height: 1.32; text-align: justify; margin: 4px 0 0; padding-bottom: 12px; border-bottom: 2px solid #111; }
+.wv-notice { font-size: 21px; line-height: 1.32; text-align: justify; margin: 4px 0 0; padding-bottom: 12px; border-bottom: 2px solid #111; }
 .wv-sigs { margin-top: 34px; display: grid; gap: 30px; }
 .wv-sig { display: grid; grid-template-columns: 1.3fr 1fr .36fr; gap: 6%; font-size: 12.5px; }
 .wv-sig span { display: block; }
@@ -739,7 +739,7 @@ a:hover > .flip .flip__b, a:focus-visible > .flip .flip__b { transform: translat
   .wv-j { text-align: left; }
   .wv-h { margin-left: 0; gap: 10px; font-size: 13.5px; }
   .wv-list { padding-left: 20px; }
-  .wv-notice { font-size: 15px; text-align: left; }
+  .wv-notice { font-size: 20px; text-align: left; }
   .wv-sig { grid-template-columns: 1fr; gap: 20px; margin-top: 4px; }
   .wv-sig span[aria-hidden] { display: none; }
   .wv-sigs { gap: 28px; }
@@ -1144,3 +1144,8 @@ p, li, dd, .lede { text-wrap: pretty; }
 .ws__done p:not(.eyebrow) { color: var(--on-dark-soft); }
 @media (max-width: 700px) { .ws__doc { max-height: 420px; font-size: 13.5px; } .ws-pad { height: 170px; } }
 .ws input[type="date"] { color-scheme: dark; }
+
+/* Fla. Stat. 744.301(3)(b): the minor notice must be capitals, at least 5pt larger than the body text */
+.ws__notice { font-size: 21px !important; line-height: 1.32; font-weight: 700; text-transform: uppercase; }
+@media (max-width: 700px) { .ws__notice { font-size: 20.5px !important; } }
+.wv-steps a { color: var(--cyan); text-underline-offset: 3px; }

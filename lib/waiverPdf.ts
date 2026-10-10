@@ -64,7 +64,9 @@ export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promi
     p.title.forEach((t) => write(t, { f: bold, size: 10, center: true, gap: 0 }));
     y -= 14;
     for (const b of p.blocks) {
-      if (b.t === "h") write(b.text, { f: bold, size: 9.5, gap: 4 });
+      // statutory minor notice: capitals, 5pt larger than the 9pt body (Fla. Stat. 744.301(3)(b))
+      if (b.notice) write(b.text.toUpperCase(), { f: bold, size: 14, gap: 8 });
+      else if (b.t === "h") write(b.text, { f: bold, size: 9.5, gap: 4 });
       else if (b.t === "li") write(`•  ${b.text}`, { indent: 12, gap: 2 });
       else {
         write(b.text, { gap: b.initial ? 2 : 6 });

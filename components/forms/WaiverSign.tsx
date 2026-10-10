@@ -21,6 +21,7 @@ const today = () => new Date().toISOString().slice(0, 10);
 function SignaturePad({ onChange }: { onChange: (png: string | null) => void }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const drawn = useRef(false);
+  const ink = useRef(0); // total stroke length, so a stray tap doesn't count as a signature
   useEffect(() => {
     const c = ref.current!;
     const fit = () => {
@@ -29,7 +30,7 @@ function SignaturePad({ onChange }: { onChange: (png: string | null) => void }) 
       c.width = r.width * dpr; c.height = r.height * dpr;
       const ctx = c.getContext("2d")!;
       ctx.scale(dpr, dpr); ctx.lineWidth = 2.4; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#0B1116";
-      drawn.current = false; onChange(null);
+      drawn.current = false; ink.current = 0; onChange(null);
     };
     fit();
     let down = false, lx = 0, ly = 0;
@@ -40,14 +41,15 @@ function SignaturePad({ onChange }: { onChange: (png: string | null) => void }) 
       const [x, y] = pos(e);
       const ctx = c.getContext("2d")!;
       ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(x, y); ctx.stroke();
+      ink.current += Math.hypot(x - lx, y - ly);
       lx = x; ly = y; drawn.current = true;
     };
-    const end = () => { if (!down) return; down = false; if (drawn.current) onChange(c.toDataURL("image/png")); };
+    const end = () => { if (!down) return; down = false; if (drawn.current && ink.current > 60) onChange(c.toDataURL("image/png")); };
     c.addEventListener("pointerdown", start); c.addEventListener("pointermove", move);
     c.addEventListener("pointerup", end); c.addEventListener("pointercancel", end);
     return () => { c.removeEventListener("pointerdown", start); c.removeEventListener("pointermove", move); c.removeEventListener("pointerup", end); c.removeEventListener("pointercancel", end); };
   }, [onChange]);
-  const clear = () => { const c = ref.current!; c.getContext("2d")!.clearRect(0, 0, c.width, c.height); drawn.current = false; onChange(null); };
+  const clear = () => { const c = ref.current!; c.getContext("2d")!.clearRect(0, 0, c.width, c.height); drawn.current = false; ink.current = 0; onChange(null); };
   return (
     <div className="ws-pad">
       <canvas ref={ref} aria-label="Signature area: sign with your finger or mouse" />
@@ -72,6 +74,18 @@ export default function WaiverSign() {
   const [pdfUrl, setPdfUrl] = useState<{ url: string; name: string } | null>(null);
   const hp = useRef<HTMLInputElement>(null);
 
+  // keep typed answers if the page is refreshed by accident (never the signature)
+  const DRAFT = "otown-waiver-draft";
+  useEffect(() => {
+    try {
+      const d = JSON.parse(sessionStorage.getItem(DRAFT) || "null");
+      if (d) { setKind(d.kind); setSigner(d.signer); setMinors(d.minors); setEmergency(d.emergency); setInitials(d.initials); }
+    } catch {}
+  }, []);
+  useEffect(() => {
+    try { sessionStorage.setItem(DRAFT, JSON.stringify({ kind, signer, minors, emergency, initials })); } catch {}
+  }, [kind, signer, minors, emergency, initials]);
+
   useEffect(() => {
     fetch("/api/waiver").then((r) => r.json()).then((j) => setReady(!!j.ready)).catch(() => setReady(false));
   }, []);
@@ -87,7 +101,7 @@ export default function WaiverSign() {
     if (kind !== "adult") for (const m of minors) { const a = ageOn(m.dob); if (m.name.trim().length < 2 || a < 0 || a >= 18) return "Each child needs a full name and a date of birth (under 18)."; }
     if (emergency.name.trim().length < 2 || emergency.phone.replace(/\D/g, "").length < 7) return "Add an emergency contact name and phone.";
     for (const k of needInitials) if (!(initials[k] || "").trim()) return `Add your initials to section ${k === "M" ? "for minor children" : k}.`;
-    if (!sig) return "Please sign in the signature box.";
+    if (!sig) return "Please sign in the signature box (a full signature, not a dot).";
     if (!agree || !esign) return "Tick both boxes to sign.";
     return "";
   };
@@ -115,6 +129,7 @@ export default function WaiverSign() {
       const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(j.error || "Something went wrong. Please try again.");
       setPdfUrl({ url: URL.createObjectURL(blob), name: j.filename || "OTown-Waiver.pdf" });
+      try { sessionStorage.removeItem(DRAFT); } catch {}
       setState("done");
       window.scrollTo({ top: (document.getElementById("sign")?.offsetTop ?? 0) - 80, behavior: "smooth" });
     } catch (err) {
@@ -195,11 +210,11 @@ export default function WaiverSign() {
             <div key={pi} className="ws__page">
               {p.title.map((t) => <p key={t} className="ws__title">{t}</p>)}
               {p.blocks.map((b, bi) =>
-                b.t === "h" ? <h3 key={bi}>{b.text}</h3>
+                b.t === "h" ? <h3 key={bi} className={b.notice ? "ws__notice" : undefined}>{b.text}</h3>
                 : b.t === "li" ? <p key={bi} className="ws__li">{b.text}</p>
                 : (
                   <div key={bi}>
-                    <p>{b.text}</p>
+                    <p className={b.notice ? "ws__notice" : undefined}>{b.text}</p>
                     {b.initial && (
                       <label className="ws__init">
                         <span>Initials{b.initial === "M" ? " (minor release)" : ` (section ${b.initial})`}</span>

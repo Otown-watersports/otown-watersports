@@ -21,11 +21,11 @@ export default function WaiverPage() {
             <h1 className="display display--lg">The waiver.</h1>
           </div>
           <div className="wv-intro__side">
-            <p>Every rider signs the O’Town Watersports release. Adults sign page 1. For riders under 18, a parent or natural guardian also signs page 2 before arriving.</p>
+            <p>Every rider signs the O’Town Watersports release before riding. Adults sign page 1. For riders under 18, a parent or natural guardian signs page 2.</p>
             <ol className="wv-steps">
-              <li>Download or print both pages.</li>
-              <li>Initial sections A to D and sign.</li>
-              <li>Bring it with you on the day.</li>
+              <li><a href="#sign">Sign online</a> in about 3 minutes (fastest).</li>
+              <li>Or download and print, initial sections A to D and sign.</li>
+              <li>Paper copies: bring it with you on the day.</li>
             </ol>
             <div className="actions">
               <a className="btn btn--primary btn--pill" href="/docs/otown-waiver.pdf" download="OTown-Watersports-Waiver.pdf">Download PDF <span aria-hidden>↓</span></a>

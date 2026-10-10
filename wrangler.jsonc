@@ -11,11 +11,10 @@
     // only the API runs code; every page and image is served straight from Cloudflare's cache
     "run_worker_first": ["/api/*"]
   },
-  "vars": {
-    "WAIVER_TO": "info@otownwatersports.com",
-    "WAIVER_FROM": "O'Town Watersports <waivers@otownwatersports.com>"
-  },
+  // signed waivers are emailed to the connected Google account; set WAIVER_TO to override
+  "triggers": { "crons": ["0 7 1 * *"] },
   // signed waivers (auto-deleted after 3 years by the bucket's lifecycle rule)
   "r2_buckets": [{ "binding": "WAIVERS", "bucket_name": "otown-waivers" }]
-  // RESEND_API_KEY is a secret: Cloudflare > Workers > otown-watersports > Settings > Variables and secrets
+  // Secrets (Cloudflare > Workers > otown-watersports > Settings > Variables and secrets):
+  // GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, ADMIN_KEY; then open /api/google/connect?key=ADMIN_KEY once
 }
