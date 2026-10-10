@@ -5,7 +5,7 @@
 export const WAIVER_VERSION = "2026-10b (Florida release, adult + minor)";
 
 /** notice: Fla. Stat. 744.301(3)(b) requires this block in capitals, at least 5 points larger than the rest of the text. */
-export type WaiverBlock = { t: "h" | "p" | "li"; text: string; initial?: "A" | "B" | "C" | "D" | "M"; notice?: boolean };
+export type WaiverBlock = { t: "h" | "p" | "li"; text: string; initial?: "A" | "B" | "C" | "D" | "M" | "T"; notice?: boolean };
 export type WaiverPage = { title: string[]; blocks: WaiverBlock[] };
 
 export const WAIVER_PAGES: WaiverPage[] = [
@@ -156,4 +156,14 @@ export const WAIVER_PAGES: WaiverPage[] = [
       }
     ]
   }
+];
+
+/** Trampoline release (optional add-on). Text verbatim from O'Town's "Trampoline Release of Liability Form". */
+export const TRAMPOLINE_VERSION = "2026-10 (trampoline release)";
+export const TRAMPOLINE_TITLE = "TRAMPOLINE RELEASE OF LIABILITY FORM";
+export const TRAMPOLINE_BLOCKS: WaiverBlock[] = [
+  { t: "p", text: "1. Training on the trampoline we have available on our property is optional. We do not carry insurance for trampoline injuries and you agree to use the trampoline at your own risk whether being supervised or not. The undersigned participant may or may not have supervision while using the trampoline." },
+  { t: "p", text: "2. The undersigned expressly assumes all inherent risk of the use of the trampoline. The undersigned hereby releases and indemnifies Otown Water Sports and its owners and employees from any and all claims of personal injury, wrongful death, or other loss of any nature whatsoever arising from or in any manner connected with the use of the trampoline by the undersigned whether arising from or based upon the negligence of the indemnified and released parties or otherwise." },
+  { t: "p", text: "3. The undersigned is either 18 (eighteen) years old or has a parent who accepts full responsibility for signing this Release and acts as a supervisor for any minor using the trampoline on the premises of Otown Water Sports." },
+  { t: "p", text: "4. This Release begins upon signing and will continue to be in effect for 5 (five) years thereafter.", initial: "T" },
 ];

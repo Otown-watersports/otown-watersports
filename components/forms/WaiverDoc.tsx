@@ -107,6 +107,23 @@ export default function WaiverDoc() {
         <p className="wv-foot wv-foot--c"><b><u>**Failure of less than all natural guardians to sign this form on behalf of a minor child does not constitute a basis for waiver of the limitations granted herein**</u></b></p>
         <p className="wv-num">2</p>
       </article>
+
+      <article className="wv-page" aria-label="Page 3: trampoline release">
+        <h2 className="wv-c">Trampoline Release of Liability Form</h2>
+        <ol className="wv-ol">
+          <li>Training on the trampoline we have available on our property is optional. We do not carry insurance for trampoline injuries and you agree to use the trampoline at your own risk whether being supervised or not. The undersigned participant may or may not have supervision while using the trampoline.</li>
+          <li>The undersigned expressly assumes all inherent risk of the use of the trampoline. The undersigned hereby releases and indemnifies Otown Water Sports and its owners and employees from any and all claims of personal injury, wrongful death, or other loss of any nature whatsoever arising from or in any manner connected with the use of the trampoline by the undersigned whether arising from or based upon the negligence of the indemnified and released parties or otherwise.</li>
+          <li>The undersigned is either 18 (eighteen) years old or has a parent who accepts full responsibility for signing this Release and acts as a supervisor for any minor using the trampoline on the premises of Otown Water Sports.</li>
+          <li>This Release begins upon signing and will continue to be in effect for 5 (five) years thereafter.</li>
+        </ol>
+        <div className="wv-sigs">
+          <Sig cols={["Trampoline Participant", null, "DATE"]} />
+          <Sig cols={["Natural Guardian Acknowledgement of Release on behalf of minor child for trampoline use", null, "DATE"]} />
+          <Sig cols={["Printed Name of Natural Guardian", null, ""]} />
+          <Sig cols={["Printed Name of Child", null, ""]} />
+        </div>
+        <p className="wv-num">3</p>
+      </article>
     </div>
   );
 }

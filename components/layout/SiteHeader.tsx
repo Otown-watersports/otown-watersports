@@ -12,6 +12,7 @@ const links = [
   { label: "Stay", href: "/stay" },
   { label: "Athletes", href: "/athletes" },
   { label: "Life at O’Town", href: "/#life" },
+  { label: "Waiver", href: "/waiver" },
 ];
 
 /** Text that rolls to a duplicate on hover (21st.dev "flip links", adapted). */

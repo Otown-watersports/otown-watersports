@@ -21,12 +21,13 @@ export interface Env extends GoogleEnv {
   WAIVER_FROM?: string;
 }
 
-type Person = { name: string; dob?: string };
+type Person = { name: string; dob: string };
 type Submission = {
   kind: "adult" | "minor" | "both";
   signer: { name: string; dob?: string; phone: string; email: string };
   minors: Person[];
   emergency: { name: string; phone: string };
+  trampoline: boolean;
   initials: Record<string, string>;
   signedAt: string;
   version: string;
@@ -47,8 +48,19 @@ const age = (dob: string, on = new Date()) => {
   if (m < 0 || (m === 0 && on.getUTCDate() < d.getUTCDate())) a--;
   return a;
 };
+/** "ANNAMARIIA kushkovskaia" -> "Annamariia Kushkovskaia" (keeps O'Neil, Smith-Jones). */
+const titleCase = (s: string) => s.toLowerCase().replace(/(^|[\s'\-])([a-z\u00e0-\u00ff])/g, (m) => m.toUpperCase());
+/** Formats US numbers as (407) 555-1212; leaves others as typed. */
+const prettyPhone = (p: string) => { const d = p.replace(/\D/g, ""); return d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : d.length === 11 && d[0] === "1" ? `(${d.slice(1, 4)}) ${d.slice(4, 7)}-${d.slice(7)}` : p; };
 const clean = (s: unknown, max = 120) => (typeof s === "string" ? s.replace(/[\u0000-\u001f]/g, " ").trim().slice(0, max) : "");
 const slug = (s: string) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "rider";
+/** Simple, mobile-friendly email frame in the site's colours. */
+const layout = (title: string, body: string) => `<!doctype html><html><body style="margin:0;background:#eef0f2;padding:24px 12px">
+<table cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden;font:15px/1.55 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#1d2328">
+<tr><td style="background:#0b1116;padding:22px 28px"><span style="font-size:20px;font-weight:800;letter-spacing:.02em;color:#22c7e8">O'TOWN</span> <span style="font-size:11px;letter-spacing:.2em;color:#f4f2ee;text-transform:uppercase">Watersports</span></td></tr>
+<tr><td style="padding:28px"><h1 style="margin:0 0 14px;font-size:22px;line-height:1.25">${title}</h1>${body}</td></tr>
+<tr><td style="padding:16px 28px;background:#f4f2ee;font-size:12px;color:#667">O'Town Watersports · 5220 E Colonial Dr, Orlando, FL 32807 · <a href="https://otownwatersports.com" style="color:#667">otownwatersports.com</a></td></tr>
+</table></body></html>`;
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
 function validate(raw: unknown): { ok: true; s: Submission } | { ok: false; error: string } {
@@ -57,12 +69,12 @@ function validate(raw: unknown): { ok: true; s: Submission } | { ok: false; erro
   if (r.website) return { ok: false, error: "Invalid form." };
   const kind = r.kind;
   if (kind !== "adult" && kind !== "minor" && kind !== "both") return { ok: false, error: "Choose who is riding." };
-  const signer = { name: clean(r.signer?.name), dob: clean(r.signer?.dob, 10), phone: clean(r.signer?.phone, 40), email: clean(r.signer?.email, 120) };
+  const signer = { name: titleCase(clean(r.signer?.name)), dob: clean(r.signer?.dob, 10), phone: clean(r.signer?.phone, 40), email: clean(r.signer?.email, 120).toLowerCase() };
   if (signer.name.length < 3) return { ok: false, error: "Enter your full name." };
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(signer.email)) return { ok: false, error: "Enter a valid email." };
   if (signer.phone.replace(/\D/g, "").length < 7) return { ok: false, error: "Enter a valid phone number." };
   if (kind !== "minor" && age(signer.dob || "") < 18) return { ok: false, error: "Adult riders must be 18 or older." };
-  const minors = (Array.isArray(r.minors) ? r.minors : []).slice(0, 6).map((m) => ({ name: clean(m?.name), dob: clean(m?.dob, 10) }));
+  const minors = (Array.isArray(r.minors) ? r.minors : []).slice(0, 6).map((m) => ({ name: titleCase(clean(m?.name)), dob: clean(m?.dob, 10) }));
   if (kind !== "adult") {
     if (!minors.length) return { ok: false, error: "Add at least one child." };
     for (const m of minors) {
@@ -70,17 +82,18 @@ function validate(raw: unknown): { ok: true; s: Submission } | { ok: false; erro
       if (m.name.length < 2 || a < 0 || a >= 18) return { ok: false, error: "Each child needs a name and a date of birth under 18." };
     }
   }
-  const emergency = { name: clean(r.emergency?.name), phone: clean(r.emergency?.phone, 40) };
-  if (emergency.name.length < 2 || emergency.phone.replace(/\D/g, "").length < 7) return { ok: false, error: "Add an emergency contact." };
-  const need = kind === "adult" ? ["A", "B", "C", "D"] : ["A", "B", "C", "D", "M"];
+  const emergency = { name: titleCase(clean(r.emergency?.name)), phone: clean(r.emergency?.phone, 40) };
+  if ((emergency.name || emergency.phone) && (emergency.name.length < 2 || emergency.phone.replace(/\D/g, "").length < 7)) return { ok: false, error: "Emergency contact needs both a name and a phone number." };
+  const trampoline = r.trampoline === true;
+  const need = [...(kind === "adult" ? ["A", "B", "C", "D"] : ["A", "B", "C", "D", "M"]), ...(trampoline ? ["T"] : [])];
   const initials: Record<string, string> = {};
   for (const k of need) {
     const v = clean(r.initials?.[k], 5).toUpperCase();
-    if (!/^[A-Z.\- ]{1,5}$/.test(v)) return { ok: false, error: `Initial section ${k === "M" ? "for minors" : k}.` };
+    if (!/^[A-Z.\- ]{1,5}$/.test(v)) return { ok: false, error: `Initial ${k === "M" ? "the minor section" : k === "T" ? "the trampoline release" : `section ${k}`}.` };
     initials[k] = v;
   }
   if (r.agree !== true || r.esign !== true) return { ok: false, error: "Tick both boxes to sign." };
-  return { ok: true, s: { kind, signer, minors: kind === "adult" ? [] : minors, emergency, initials, signedAt: clean(r.signedAt, 40), version: clean(r.version, 80), agree: true, esign: true } };
+  return { ok: true, s: { kind, signer, minors: kind === "adult" ? [] : minors, emergency, trampoline, initials, signedAt: clean(r.signedAt, 40), version: clean(r.version, 80), agree: true, esign: true } };
 }
 
 async function sha256(buf: ArrayBuffer) {
@@ -132,7 +145,7 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
   const now = new Date();
   const id = crypto.randomUUID().slice(0, 8);
   const hash = await sha256(pdfBuf);
-  const who = s.kind === "adult" ? s.signer.name : `${s.minors.map((m) => m.name).join(", ")} (guardian ${s.signer.name})`;
+  const who = s.kind === "adult" ? s.signer.name : s.minors.map((m) => m.name).join(", ");
   const audit = {
     id,
     receivedAt: now.toISOString(),
@@ -143,8 +156,13 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
     ...s,
   };
   const day = now.toISOString().slice(0, 10);
-  const base = `waivers/${day.slice(0, 4)}/${day.slice(5, 7)}/${day}_${slug(s.signer.name)}_${id}`;
-  const filename = `OTown-Waiver_${day}_${slug(s.signer.name)}.pdf`;
+  // File name sorts by rider surname, then date: "Kushkovskaia, Anna - 2026-10-10 - Waiver.pdf"
+  const parts = s.signer.name.split(" ");
+  const byName = parts.length > 1 ? `${parts[parts.length - 1]}, ${parts.slice(0, -1).join(" ")}` : s.signer.name;
+  const riderPart = s.kind === "adult" ? byName : `${byName} (guardian of ${s.minors.map((m) => m.name.split(" ")[0]).join(", ")})`;
+  const docPart = s.trampoline ? "Waiver + Trampoline" : "Waiver";
+  const filename = `${riderPart} - ${day} - ${docPart}.pdf`.replace(/[\\/:*?"<>|]/g, "");
+  const base = `waivers/${day.slice(0, 4)}/${day}_${slug(s.signer.name)}_${id}`;
 
   let stored = false, emailed = false, drive = false;
   if (env.WAIVERS) {
@@ -160,28 +178,50 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
     drive = await driveUpload(env, google, filename, pdfBuf, `${who} · signed ${now.toISOString()} · SHA-256 ${hash}`).catch(() => false);
   }
   if (google || env.RESEND_API_KEY) {
+    const fmtDob = (d: string) => new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+    const ageOf = (d: string) => age(d, now);
+    const device = /iPhone/.test(audit.userAgent) ? "iPhone" : /iPad/.test(audit.userAgent) ? "iPad" : /Android/.test(audit.userAgent) ? "Android phone" : /Macintosh/.test(audit.userAgent) ? "Mac" : /Windows/.test(audit.userAgent) ? "Windows PC" : "web browser";
     const rows: [string, string][] = [
-      ["Rider(s)", who],
-      ["Type", s.kind === "adult" ? "Adult (18+)" : s.kind === "minor" ? "Minor(s), signed by guardian" : "Adult + minor(s)"],
-      ["Signer", `${s.signer.name}${s.signer.dob ? ` · born ${s.signer.dob}` : ""}`],
-      ["Phone", s.signer.phone],
+      ...(s.kind === "adult"
+        ? [["Rider", `${s.signer.name}, ${ageOf(s.signer.dob ?? "")} (born ${fmtDob(s.signer.dob ?? "")})`] as [string, string]]
+        : [
+            ...s.minors.map((m, i) => [`Rider${s.minors.length > 1 ? ` ${i + 1}` : ""}`, `${m.name}, ${ageOf(m.dob ?? "")} (born ${fmtDob(m.dob ?? "")})`] as [string, string]),
+            ...(s.kind === "both" ? [["Also riding", `${s.signer.name}, ${ageOf(s.signer.dob ?? "")} (born ${fmtDob(s.signer.dob ?? "")})`] as [string, string]] : []),
+            ["Signed by", `${s.signer.name} (parent / guardian)`] as [string, string],
+          ]),
+      ["Phone", prettyPhone(s.signer.phone)],
       ["Email", s.signer.email],
-      ...s.minors.map((m, i) => [`Child ${i + 1}`, `${m.name} · born ${m.dob}`] as [string, string]),
-      ["Emergency contact", `${s.emergency.name} · ${s.emergency.phone}`],
-      ["Signed (server time)", now.toLocaleString("en-US", { timeZone: "America/New_York" }) + " ET"],
-      ["IP / device", `${audit.ip} ${audit.country} · ${audit.userAgent.slice(0, 90)}`],
-      ["Document SHA-256", hash],
-      ["Waiver ID", id],
+      ["Emergency contact", s.emergency.name ? `${s.emergency.name}, ${prettyPhone(s.emergency.phone)}` : "not provided"],
+      ["Documents", s.trampoline ? "Water sports release + trampoline release (5 years)" : "Water sports release"],
+      ["Signed", `${now.toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "medium", timeStyle: "short" })} ET, from ${device}`],
     ];
-    const table = `<table cellpadding="6" style="border-collapse:collapse;font:14px/1.4 Arial,sans-serif">${rows.map(([k, val]) => `<tr><td style="color:#667;vertical-align:top">${esc(k)}</td><td><b>${esc(val)}</b></td></tr>`).join("")}</table>`;
+    const table = `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:14px">${rows.map(([k, val], i) => `<tr><td style="padding:9px 12px;color:#667;background:${i % 2 ? "#fff" : "#f4f2ee"};white-space:nowrap;vertical-align:top">${esc(k)}</td><td style="padding:9px 12px;background:${i % 2 ? "#fff" : "#f4f2ee"}"><b>${esc(val)}</b></td></tr>`).join("")}</table>
+      <p style="margin:16px 0 0;font-size:12px;color:#889">Record ${id} · IP ${esc(audit.ip)} (${esc(audit.country)}) · file fingerprint ${hash.slice(0, 12)}… · full details are stored with the PDF.</p>`;
     const saved = [stored && "Cloudflare", drive && "Google Drive"].filter(Boolean).join(" and ");
-    const ownerHtml = `<p style="font:15px Arial,sans-serif">A new waiver was signed online. The signed PDF is attached${saved ? ` and saved in ${saved}` : ""}.</p>${table}`;
-    const riderHtml = `<p style="font:15px/1.5 Arial,sans-serif">Thanks, ${esc(s.signer.name.split(" ")[0])}. Your signed waiver is attached for your records. See you on the water.<br><br>O'Town Watersports · Lake Barton, Orlando</p>`;
+    const signedOn = now.toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "long", timeStyle: "short" });
+    const ownerHtml = layout(`${who} signed the waiver`, `
+      <p style="margin:0 0 16px">Signed online just now. The PDF is attached${saved ? ` and filed in ${esc(saved)}` : ""}.</p>${table}`);
+    const first = esc(s.signer.name.split(" ")[0]);
+    const riders = s.kind === "adult" ? "you" : s.minors.length === 1 ? esc(s.minors[0].name) : `${s.minors.map((m) => esc(m.name)).join(", ")}`;
+    const riderHtml = layout(`You're all set, ${first}!`, `
+      <p style="margin:0 0 14px">Thanks for signing the O'Town Watersports waiver${s.kind === "adult" ? "" : ` for ${riders}`}. Your signed copy is attached to this email. Keep it for your records; no need to print anything.</p>
+      <table cellpadding="0" cellspacing="0" style="margin:18px 0;border-collapse:collapse;width:100%">
+        <tr><td style="padding:10px 14px;background:#f4f2ee;border-radius:8px 8px 0 0;font-size:13px;color:#667">Signed</td><td style="padding:10px 14px;background:#f4f2ee;border-radius:8px 8px 0 0;font-size:14px"><b>${esc(signedOn)} (Eastern)</b></td></tr>
+        <tr><td style="padding:10px 14px;background:#f4f2ee;font-size:13px;color:#667">Rider${s.minors.length > 1 ? "s" : ""}</td><td style="padding:10px 14px;background:#f4f2ee;font-size:14px"><b>${s.kind === "adult" ? esc(s.signer.name) : riders}</b></td></tr>
+        <tr><td style="padding:10px 14px;background:#f4f2ee;border-radius:0 0 8px 8px;font-size:13px;color:#667">Reference</td><td style="padding:10px 14px;background:#f4f2ee;border-radius:0 0 8px 8px;font-size:14px"><b>${id}</b></td></tr>
+      </table>
+      <p style="margin:0 0 14px"><b>Before your session</b></p>
+      <ul style="margin:0 0 18px;padding-left:20px;line-height:1.7">
+        <li>Be on the dock with your equipment on at your start time. Lessons run rain or shine.</li>
+        <li>Lake Barton, Orlando: directions and parking are on <a href="https://otownwatersports.com/plan" style="color:#0b7a95">otownwatersports.com/plan</a>.</li>
+        <li>Questions or need to reschedule? Call <a href="tel:+14075297727" style="color:#0b7a95">407 529 7727</a>.</li>
+      </ul>
+      <p style="margin:0">See you on the water!<br><b>Glen &amp; the O'Town Watersports team</b></p>`);
     const send = (to: string, subject: string, html: string, replyTo?: string) =>
       google
         ? gmailSend(env, google, { to, replyTo, subject, html, filename, pdfB64: b64 })
         : sendEmail(env, to, subject, html, filename, b64, replyTo);
-    emailed = await send(owner, `Signed waiver: ${who}`, ownerHtml, s.signer.email).catch(() => false);
+    emailed = await send(owner, `Signed waiver${s.trampoline ? " + trampoline release" : ""}: ${who}`, ownerHtml, s.signer.email).catch(() => false);
     await send(s.signer.email, "Your signed O'Town Watersports waiver", riderHtml).catch(() => false);
   }
   if (!stored && !emailed && !drive) return json({ error: "We couldn't save your waiver. Please try again, or download and print it." }, 502);

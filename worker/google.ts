@@ -12,7 +12,7 @@ export interface GoogleEnv {
   ADMIN_KEY?: string;
 }
 
-type GoogleConfig = { refreshToken: string; email: string; folderId: string; connectedAt: string };
+type GoogleConfig = { refreshToken: string; email: string; folderId: string; connectedAt: string; years?: Record<string, string> };
 
 const CONFIG_KEY = "config/google.json";
 const SCOPES = "openid email https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/gmail.send";
@@ -130,10 +130,31 @@ export async function gmailSend(env: GoogleEnv, cfg: GoogleConfig, o: { to: stri
   return r.ok;
 }
 
-/** Save the PDF to the Drive folder. */
+/** Year subfolder inside the waivers folder ("2026", "2027", ...), created on first use and remembered. */
+async function yearFolder(env: GoogleEnv, cfg: GoogleConfig, token: string, year: string): Promise<string> {
+  if (cfg.years?.[year]) return cfg.years[year];
+  const q = `'${cfg.folderId}' in parents and name = '${year}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`;
+  const found = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id)`, { headers: { Authorization: `Bearer ${token}` } });
+  let id = ((await found.json()) as { files?: { id: string }[] }).files?.[0]?.id;
+  if (!id) {
+    const made = await fetch("https://www.googleapis.com/drive/v3/files?fields=id", {
+      method: "POST", headers: { Authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify({ name: year, mimeType: "application/vnd.google-apps.folder", parents: [cfg.folderId] }),
+    });
+    id = ((await made.json()) as { id?: string }).id;
+  }
+  if (!id) return cfg.folderId;
+  cfg.years = { ...(cfg.years ?? {}), [year]: id };
+  await env.WAIVERS?.put(CONFIG_KEY, JSON.stringify(cfg));
+  return id;
+}
+
+/** Save the PDF to the Drive folder, inside the current year's subfolder. */
 export async function driveUpload(env: GoogleEnv, cfg: GoogleConfig, filename: string, pdf: ArrayBuffer, description: string) {
+  const token = await accessToken(env, cfg);
+  const parent = await yearFolder(env, cfg, token, filename.match(/(\d{4})-\d{2}-\d{2}/)?.[1] ?? String(new Date().getFullYear()));
   const boundary = `b_${crypto.randomUUID()}`;
-  const meta = JSON.stringify({ name: filename, parents: [cfg.folderId], description, mimeType: "application/pdf" });
+  const meta = JSON.stringify({ name: filename, parents: [parent], description, mimeType: "application/pdf" });
   const body = new Blob([
     `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n`,
     `--${boundary}\r\nContent-Type: application/pdf\r\n\r\n`,
@@ -142,7 +163,7 @@ export async function driveUpload(env: GoogleEnv, cfg: GoogleConfig, filename: s
   ]);
   const r = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id", {
     method: "POST",
-    headers: { Authorization: `Bearer ${await accessToken(env, cfg)}`, "content-type": `multipart/related; boundary=${boundary}` },
+    headers: { Authorization: `Bearer ${token}`, "content-type": `multipart/related; boundary=${boundary}` },
     body,
   });
   return r.ok;
@@ -153,7 +174,8 @@ export async function cleanupDrive(env: GoogleEnv) {
   const cfg = await getConfig(env);
   if (!cfg || !env.GOOGLE_CLIENT_ID) return;
   const cutoff = new Date(Date.now() - RETENTION_DAYS * 86_400_000).toISOString();
-  const q = `'${cfg.folderId}' in parents and createdTime < '${cutoff}' and trashed = false`;
+  const parents = [cfg.folderId, ...Object.values(cfg.years ?? {})];
+  const q = `(${parents.map((p) => `'${p}' in parents`).join(" or ")}) and mimeType != 'application/vnd.google-apps.folder' and createdTime < '${cutoff}' and trashed = false`;
   const token = await accessToken(env, cfg);
   const list = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id)&pageSize=200`, { headers: { Authorization: `Bearer ${token}` } });
   const { files = [] } = (await list.json()) as { files?: { id: string }[] };

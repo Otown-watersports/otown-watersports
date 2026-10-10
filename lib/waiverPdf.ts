@@ -1,11 +1,12 @@
 /** Builds the signed waiver PDF in the browser (pdf-lib is loaded only when the rider submits). */
-import { WAIVER_PAGES, WAIVER_VERSION } from "@/content/waiverText";
+import { TRAMPOLINE_BLOCKS, TRAMPOLINE_TITLE, TRAMPOLINE_VERSION, WAIVER_PAGES, WAIVER_VERSION } from "@/content/waiverText";
 
 export type WaiverData = {
   kind: "adult" | "minor" | "both";
   signer: { name: string; dob?: string; phone: string; email: string };
   minors: { name: string; dob: string }[];
   emergency: { name: string; phone: string };
+  trampoline?: boolean;
   initials: Record<string, string>;
   signedAt: string;
   version: string;
@@ -55,7 +56,7 @@ export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promi
   };
 
   write("O'TOWN WATERSPORTS  ·  SIGNED ONLINE", { f: bold, size: 8, color: cyan, gap: 10 });
-  const pages = d.kind === "adult" ? [WAIVER_PAGES[0]] : WAIVER_PAGES;
+  const pages = [...(d.kind === "adult" ? [WAIVER_PAGES[0]] : WAIVER_PAGES), ...(d.trampoline ? [{ title: [TRAMPOLINE_TITLE], blocks: TRAMPOLINE_BLOCKS }] : [])];
   pages.forEach((p, pi) => {
     if (pi > 0) { page = doc.addPage([W, H]); y = H - M; }
     ensure(40);
@@ -84,9 +85,10 @@ export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promi
     ["Phone", d.signer.phone],
     ["Email", d.signer.email],
     ...d.minors.map((m, i) => [`Minor child ${i + 1}`, `${m.name}, born ${m.dob}`] as [string, string]),
-    ["Emergency contact", `${d.emergency.name}, ${d.emergency.phone}`],
+    ["Emergency contact", d.emergency.name ? `${d.emergency.name}, ${d.emergency.phone}` : "not provided"],
     ["Signed on", new Date(d.signedAt).toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "long", timeStyle: "short" }) + " (Eastern)"],
-    ["Document version", WAIVER_VERSION],
+    ["Documents", d.trampoline ? `Water sports release + trampoline release` : "Water sports release"],
+    ["Document version", d.trampoline ? `${WAIVER_VERSION}; ${TRAMPOLINE_VERSION}` : WAIVER_VERSION],
   ];
   for (const [k, v] of rows) {
     ensure(16);
@@ -103,7 +105,7 @@ export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promi
   y -= sh + 4;
   page.drawLine({ start: { x: M, y }, end: { x: M + 300, y }, thickness: 0.8, color: ink });
   y -= 14;
-  write(`Signature of ${d.kind === "adult" ? "Adult Participant" : "Natural Guardian"}: ${d.signer.name}`, { size: 9, color: soft, gap: 16 });
+  write(`Signature of ${d.kind === "adult" ? "Adult Participant" : "Natural Guardian"}: ${d.signer.name}${d.trampoline ? " (water sports release and trampoline release)" : ""}`, { size: 9, color: soft, gap: 16 });
   write("The signer confirmed: \"I have read this entire agreement, initialed each section, understand that I am giving up legal rights, and agree to be bound by it.\"", { size: 9, gap: 6 });
   write("The signer agreed to sign electronically and that this electronic signature has the same effect as a handwritten signature (Florida Uniform Electronic Transaction Act, Fla. Stat. 668.50; federal E-SIGN Act).", { size: 9, gap: 6 });
   write("O'Town Watersports records the server time, IP address, device and a SHA-256 fingerprint of this file when it is received.", { size: 8, color: soft });
