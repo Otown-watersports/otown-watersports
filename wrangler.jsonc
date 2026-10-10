@@ -1,9 +1,21 @@
 {
+  // O'Town Watersports: static site (./out) + a small Worker for the online waiver (worker/index.ts)
   "name": "otown-watersports",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-10-06",
   "assets": {
     "directory": "./out",
+    "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "html_handling": "auto-trailing-slash"
+    "html_handling": "auto-trailing-slash",
+    // only the API runs code; every page and image is served straight from Cloudflare's cache
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "WAIVER_TO": "info@otownwatersports.com",
+    "WAIVER_FROM": "O'Town Watersports <waivers@otownwatersports.com>"
   }
+  // After R2 is enabled in the dashboard, add:
+  // "r2_buckets": [{ "binding": "WAIVERS", "bucket_name": "otown-waivers" }]
+  // RESEND_API_KEY is a secret: Cloudflare > Workers > otown-watersports > Settings > Variables and secrets
 }

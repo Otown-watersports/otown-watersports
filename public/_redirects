@@ -69,11 +69,11 @@
 /bryce-corrand-2013/ /athletes 301
 /james-loisel-2013 /athletes 301
 /james-loisel-2013/ /athletes 301
-/category/* /athletes 301
 /feed /  301
 /feed/ / 301
-/wp-content/* / 301
-/wp-admin/* / 301
 /wp-login.php / 301
 /home / 301
 /home/ / 301
+/category/* /athletes 301
+/wp-content/* / 301
+/wp-admin/* / 301

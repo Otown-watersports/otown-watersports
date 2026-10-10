@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import WaiverDoc from "@/components/forms/WaiverDoc";
 import PrintButton from "@/components/forms/PrintButton";
+import WaiverSign from "@/components/forms/WaiverSign";
 import { contact } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -34,6 +35,7 @@ export default function WaiverPage() {
           </div>
         </div>
       </section>
+      <WaiverSign />
       <section className="wv-wrap" aria-label="Waiver document">
         <WaiverDoc />
       </section>
