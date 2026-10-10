@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef } from "react";
+import { imgUrl } from "@/lib/img";
 
 type Props = { src: string; alt: string; caption: string; className?: string; sizes: string; position?: string };
 
@@ -26,7 +27,7 @@ export default function Lightbox({ src, alt, caption, className, sizes, position
           </button>
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="media-dialog__img" src={src} alt={alt} loading="lazy" />
+        <img className="media-dialog__img" src={imgUrl(src, 1920)} alt={alt} loading="lazy" />
       </dialog>
     </>
   );

@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
   images: {
-    qualities: [75, 85],
-    formats: ["image/avif", "image/webp"],
+    loader: "custom",
+    loaderFile: "./lib/img.ts",
+    deviceSizes: [640, 828, 1080, 1280, 1920],
+    imageSizes: [256, 384],
   },
 };
 export default nextConfig;

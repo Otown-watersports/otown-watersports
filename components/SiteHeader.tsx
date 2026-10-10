@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Magnetic from "./Magnetic";
+import { imgUrl } from "@/lib/img";
 
 const links = [
   { label: "Coaching", href: "/coaching" },
@@ -74,9 +75,9 @@ export default function SiteHeader() {
       <div className="site-header__bar">
         <Link href="/" className="brand" aria-label="O’Town Watersports home" onClick={close}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="brand__logo brand__logo--neon" src="/brand/otown-logo-neon.png" alt="" width={900} height={302} />
+          <img className="brand__logo brand__logo--neon" src={imgUrl("/brand/otown-logo-neon.png", 640)} alt="" width={900} height={302} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="brand__logo brand__logo--solid" src="/brand/otown-logo-solid.png" alt="" width={900} height={302} />
+          <img className="brand__logo brand__logo--solid" src={imgUrl("/brand/otown-logo-solid.png", 640)} alt="" width={900} height={302} />
           <span className="brand__sub">Watersports</span>
         </Link>
 

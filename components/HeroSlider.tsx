@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { heroSlides, contact } from "@/content/site";
 import VideoDialog from "./VideoDialog";
 import Magnetic from "./Magnetic";
+import { imgUrl } from "@/lib/img";
 
 const DURATION = 6500;
 
@@ -100,7 +101,7 @@ export default function HeroSlider() {
           <VideoDialog src="/video/glen-film.mp4" title="Glen on the water" className="film-chip">
             <span className="film-chip__media">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/video/glen-film-poster.jpg" alt="" width={720} height={720} />
+              <img src={imgUrl("/video/glen-film-poster.jpg", 384)} alt="" width={720} height={720} />
               <span className="film-chip__play" aria-hidden>
                 <svg viewBox="0 0 24 24" width="14" height="14"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor" /></svg>
               </span>

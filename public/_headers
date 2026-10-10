@@ -1,0 +1,14 @@
+/_img/*
+  Cache-Control: public, max-age=31536000, immutable
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+/boat/*
+  Cache-Control: public, max-age=2592000
+/video/*
+  Cache-Control: public, max-age=2592000
+/athletes/*.jpg
+  Cache-Control: public, max-age=2592000
+/images/*
+  Cache-Control: public, max-age=2592000
+/brand/*
+  Cache-Control: public, max-age=2592000

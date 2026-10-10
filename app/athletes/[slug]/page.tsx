@@ -7,7 +7,7 @@ import { riderBios } from "@/content/riderBios";
 import { riderResults } from "@/content/riderResults";
 import RiderCarousel from "@/components/RiderCarousel";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otown-watersports.vercel.app";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otownwatersports.com";
 
 export function generateStaticParams() {
   return riders.map((r) => ({ slug: r.key }));

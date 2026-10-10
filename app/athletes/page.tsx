@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { riders } from "@/content/site";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otown-watersports.vercel.app";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otownwatersports.com";
 
 export const metadata: Metadata = {
   title: "O’Town Riders: Meagan Ethell, Rusty Malinoski, Jamie Huser, Camden Marsden & more",

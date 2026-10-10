@@ -7,12 +7,13 @@ import BoatPolaroids from "@/components/BoatPolaroids";
 import MediaGallery from "@/components/MediaGallery";
 import { boat, contact, experiences, glen } from "@/content/site";
 import { getLatestReels } from "@/lib/instagram";
+import { imgUrl } from "@/lib/img";
 
 const Arrow = () => (
   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" /></svg>
 );
 
-export const revalidate = 3600;
+export const dynamic = "force-static";
 
 export default async function Home() {
   const reels = await getLatestReels(6);
@@ -155,7 +156,7 @@ export default async function Home() {
             <li key={p.id}>
               <a href={p.href} target="_blank" rel="noreferrer" className="ig__card">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.image} alt="" loading="lazy" width={360} height={640} />
+                <img src={imgUrl(p.image, 384)} alt="" loading="lazy" width={360} height={640} />
                 <span className="ig__cap">{p.caption}</span>
               </a>
             </li>

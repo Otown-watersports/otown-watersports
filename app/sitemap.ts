@@ -1,7 +1,8 @@
+export const dynamic = "force-static";
 import type { MetadataRoute } from "next";
 import { riders } from "@/content/site";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otown-watersports.vercel.app";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otownwatersports.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return ["", "/coaching", "/rates", "/athletes", "/stay", "/plan", "/waiver", ...riders.map((r) => `/athletes/${r.key}`)].map((p) => ({

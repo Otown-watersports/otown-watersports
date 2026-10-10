@@ -7,7 +7,7 @@ import SiteFooter from "@/components/SiteFooter";
 import SmoothAnchors from "@/components/SmoothAnchors";
 import Reveal from "@/components/Reveal";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otown-watersports.vercel.app";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otownwatersports.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

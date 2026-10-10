@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { imgUrl } from "@/lib/img";
 
 export type GalleryItem =
   | { kind: "image"; src: string; alt: string; caption: string; cls: string; sizes: string; position?: string }
@@ -45,7 +46,7 @@ export default function MediaGallery({ items, className }: { items: GalleryItem[
               <Image src={it.src} alt={it.alt} fill sizes={it.sizes} quality={85} style={it.position ? { objectPosition: it.position } : undefined} />
             ) : (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={it.poster} alt={it.alt} loading="lazy" style={it.position ? { objectPosition: it.position } : undefined} />
+              <img src={imgUrl(it.poster, 640)} alt={it.alt} loading="lazy" style={it.position ? { objectPosition: it.position } : undefined} />
             )}
             {it.kind === "video" && <span className="tile__play"><Play /></span>}
             <span className="tile__cap">{it.caption}</span>
@@ -66,10 +67,10 @@ export default function MediaGallery({ items, className }: { items: GalleryItem[
         <div className="gal__stage">
           {cur?.kind === "image" && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img key={cur.src} className="media-dialog__img" src={cur.src} alt={cur.alt} />
+            <img key={cur.src} className="media-dialog__img" src={imgUrl(cur.src, 1920)} alt={cur.alt} />
           )}
           {cur?.kind === "video" && (
-            <video key={cur.src} className="media-dialog__video" src={cur.src} poster={cur.poster} controls autoPlay playsInline muted preload="auto" />
+            <video key={cur.src} className="media-dialog__video" src={cur.src} poster={imgUrl(cur.poster, 1280)} controls autoPlay playsInline muted preload="auto" />
           )}
           <button type="button" className="gal__nav gal__nav--prev" onClick={() => step(-1)} aria-label="Previous">
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="2" /></svg>
