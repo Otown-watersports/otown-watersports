@@ -14,8 +14,8 @@
   "vars": {
     "WAIVER_TO": "info@otownwatersports.com",
     "WAIVER_FROM": "O'Town Watersports <waivers@otownwatersports.com>"
-  }
-  // After R2 is enabled in the dashboard, add:
-  // "r2_buckets": [{ "binding": "WAIVERS", "bucket_name": "otown-waivers" }]
+  },
+  // signed waivers (auto-deleted after 3 years by the bucket's lifecycle rule)
+  "r2_buckets": [{ "binding": "WAIVERS", "bucket_name": "otown-waivers" }]
   // RESEND_API_KEY is a secret: Cloudflare > Workers > otown-watersports > Settings > Variables and secrets
 }

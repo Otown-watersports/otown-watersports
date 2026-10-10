@@ -108,9 +108,10 @@ async function sendEmail(env: Env, to: string, subject: string, html: string, fi
 }
 
 async function handleWaiver(req: Request, env: Env): Promise<Response> {
-  if (req.method === "GET") return json({ ready: Boolean(env.WAIVERS || env.RESEND_API_KEY) });
+  // The form goes live once email is connected (storage alone would leave O'Town without a notification)
+  if (req.method === "GET") return json({ ready: Boolean(env.RESEND_API_KEY) });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
-  if (!env.WAIVERS && !env.RESEND_API_KEY) return json({ error: "Online signing isn't switched on yet. Please download and print the waiver." }, 503);
+  if (!env.RESEND_API_KEY) return json({ error: "Online signing isn't switched on yet. Please download and print the waiver." }, 503);
 
   let form: FormData;
   try { form = await req.formData(); } catch { return json({ error: "Invalid form." }, 400); }

@@ -1,6 +1,6 @@
 /**
  * The O'Town Watersports release, reset as a real document (not a scan).
- * Legal text is verbatim from the original Florida-Release PDF (otownwatersports.com/about/waiver), wording and spelling unchanged.
+ * Legal text from the original Florida-Release PDF, with spelling corrected (Oct 2026).
  * Layout follows the original: grey title box, red emphasis, lettered sections, initial and signature lines.
  */
 
@@ -25,7 +25,7 @@ export default function WaiverDoc() {
 
         <p className="wv-j">
           Please read the following agreement carefully <Red>BEFORE DECIDING TO PARTICIPATE.</Red> By signing this document and initialing the required sections,{" "}
-          <Red>YOU ARE EXPRESSLY AGREEING TO HAVE KNOWLINGLY, FULLY AND TOTALLY RELEASED</Red> the Owner/Company/His Agents and Employees (hereinafter “the Released”){" "}
+          <Red>YOU ARE EXPRESSLY AGREEING TO HAVE KNOWINGLY, FULLY AND TOTALLY RELEASED</Red> the Owner/Company/His Agents and Employees (hereinafter “the Released”){" "}
           <Red>FROM ANY AND ALL CLAIMS, INCLUDING ACTIVE OR PASSIVE NEGLIGENCE BUT EXCLUDING GROSS NEGLIGENCE AND/OR INTENTIONAL MISCONDUCT</Red>, arising out of any act, omission, or condition existing prior to the signing of the agreement, and extending to include any act, omission, or condition in any way connected with your participation in (including transit to and from) these water sports activities, occurring at any point in the future from the activities in which you are about to purchase/engage.
         </p>
 
@@ -51,7 +51,7 @@ export default function WaiverDoc() {
           <b>VOLUNTARILY AND EXPRESSLY ASSUME THE RISK OF SERIOUS BODILY HARM, PERSONAL INJURY, DEATH OR DAMAGE</b> resulting from any and all inherent risks while participating and engaging in (including transit to and from) these water sports activities. By expressly assuming <Red>ANY AND ALL INHERENT RISKS</Red> involved with these water sports activities, you are voluntarily relinquishing the ability to seek or collect damages from the Released due to any personal injury, claim, or incident occurring or in any way related to or arising from the inherent risks of your involvement in these water sports activities.<Init />
         </p>
 
-        <h2 className="wv-h"><span>B.</span><u>INDEMINITY AGREEMENT STATEMENT</u></h2>
+        <h2 className="wv-h"><span>B.</span><u>INDEMNITY AGREEMENT STATEMENT</u></h2>
         <p className="wv-j">
           By initialing this section and executing this WAIVER below, you are further agreeing to hold harmless and to indemnify the Released against any and all claims, demands, losses, damages, causes of action, judgments, costs, expenses, attorneys’ fees, and other liabilities, including those from third parties, arising out of or relating to your participation in any water sports and/or presence upon the property on which they are located, even if caused by the active or passive negligence of the Released, but excluding any gross negligence or intentional misconduct. By agreeing to indemnify the Released for the acts, occurrences, and expenses as contained within this subsection you are knowingly and voluntarily agreeing that you may be required to reimburse or provide the cost of a legal defense or representation for the Released for any expenses or actions it has to take arising out of your participation in these water sports activities.<Init />
         </p>
@@ -59,7 +59,7 @@ export default function WaiverDoc() {
         <h2 className="wv-h"><span>C.</span><u>WAIVER AND RELEASE OF LIABILITY</u></h2>
         <p className="wv-j">
           By initialing this section and signing this WAIVER below,{" "}
-          <b>YOU ARE AGREEING TO KNOWINGLY, VOLUNTARILY, AND UNEQUIVICALLY WAIVE ANY AND ALL CLAIMS, INCLUDING ACTIVE OR PASSIVE NEGLIGENCE BUT EXCLUDING GROSS NEGLIGENCE OR INTENTIONAL MISCONDUCT,</b>{" "}
+          <b>YOU ARE AGREEING TO KNOWINGLY, VOLUNTARILY, AND UNEQUIVOCALLY WAIVE ANY AND ALL CLAIMS, INCLUDING ACTIVE OR PASSIVE NEGLIGENCE BUT EXCLUDING GROSS NEGLIGENCE OR INTENTIONAL MISCONDUCT,</b>{" "}
           against the Released arising out of any act, omission, or condition existing prior to the signing of the agreement, and extending to any act, omission, or condition in any way connected with your participation in (including transit to and from) these water sports activities occurring at any point in the future. THIS WAIVER AND RELEASE OF LIABILITY IS EXPRESSLY PROVIDED TO EXCULPATE THE RELEASED FROM THOSE LIABILITIES WHICH ARE SEPARATE FROM AND IN ADDITION TO THE POTENTIAL LIABILITIES CREATED BY THE RISKS INHERENT IN WATER SPORTS PARTICIPATION. Furthermore, by initialing and signing this waiver below, you are binding your spouse, heirs, assigns, and any similarly situated personal or legal representative to the waiver’s terms.<br /><Init dot />
         </p>
 
@@ -90,12 +90,12 @@ export default function WaiverDoc() {
           READ THIS FORM COMPLETELY AND CAREFULLY. YOU ARE AGREEING TO LET YOUR MINOR CHILD ENGAGE IN A POTENTIALLY DANGEROUS ACTIVITY. YOU ARE AGREEING THAT, EVEN IF THE RELEASED USES REASONABLE CARE IN PROVIDING THIS ACTIVITY, THERE IS A CHANCE YOUR CHILD MAY BE SERIOUSLY INJURED OR KILLED BY PARTICIPATING IN THIS ACTIVITY BECAUSE THERE ARE CERTAIN DANGERS INHERENT IN THE ACTIVITY WHICH CANNOT BE AVOIDED OR ELIMINATED. BY SIGNING THIS FORM YOU ARE GIVING UP YOUR CHILD&apos;S RIGHT AND YOUR RIGHT TO RECOVER FROM THE RELEASED IN A LAWSUIT FOR ANY PERSONAL INJURY, INCLUDING DEATH, TO YOUR CHILD OR ANY PROPERTY DAMAGE THAT RESULTS FROM THE RISKS THAT ARE A NATURAL PART OF THE ACTIVITY. YOU HAVE THE RIGHT TO REFUSE TO SIGN THIS FORM, AND THE RELEASED HAS THE RIGHT TO REFUSE TO LET YOUR CHILD PARTICIPATE IF YOU DO NOT SIGN THIS FORM.
         </p>
 
-        <h2 className="wv-c wv-c--sm"><u>EFFECT OF FLORIDA LAW ON A LEGAL GUARDIAN’S ABILITY TO WAIVE CLAIMS OF NEGLIGENCE ON BEHALF OF COMMERICAL ENTITIES FOR INJURIES, DEATH OR LOSS EXPERIENCED BY THEIR MINOR CHILDREN</u></h2>
+        <h2 className="wv-c wv-c--sm"><u>EFFECT OF FLORIDA LAW ON A LEGAL GUARDIAN’S ABILITY TO WAIVE CLAIMS OF NEGLIGENCE ON BEHALF OF COMMERCIAL ENTITIES FOR INJURIES, DEATH OR LOSS EXPERIENCED BY THEIR MINOR CHILDREN</u></h2>
         <p className="wv-j">
           This supplemental waiver for minor children does not waive your minor child’s ability to recover against the Released for injuries, damages, or other loss occurring to the minor child, brought on behalf of the minor child by either you as natural guardian, personal representative, or guardian ad litem based on the negligence of the Released. By initialing this section and signing the waiver below, you are knowingly and voluntarily agreeing, and expressly acknowledging, that you have read the statement above regarding the waiver of your ability, as well as that of your minor child or his/her representative, to recover against the Released for any PERSONAL INJURY, INCLUDING DEATH, TO YOUR CHILD OR ANY PROPERTY DAMAGE THAT RESULTS FROM THE RISKS THAT ARE <u>A NATURAL PART OF THE ACTIVITY</u>. As provided by Fla. Stat. §744.301(3)(b) (2012), the term natural risk or otherwise construed as an “inherent risk” of the activity means those dangers or conditions, known or unknown, which are characteristic of, intrinsic to, or an integral part of the activity and which are not eliminated even if the activity provider acts with due care in a reasonably prudent manner. The term includes, but is not limited to the failure by the activity provider to warn the natural guardian or minor child of an inherent risk; and the risk that the minor child or another participant in the activity may act in a negligent or intentional manner and contribute to the injury or death of the minor child. The scope of this supplemental waiver shall be coextensive with that of the Adult Participant Waiver to the fullest extent allowed by state law.
         </p>
 
-        <h2 className="wv-c wv-c--sm"><u>NATURAL GUARDIAN’S ACKNOWLEDGEMENT OF LIMITED RELEASE ON BEHALF OF MINOR CHILD</u></h2>
+        <h2 className="wv-c wv-c--sm"><u>NATURAL GUARDIAN’S ACKNOWLEDGMENT OF LIMITED RELEASE ON BEHALF OF MINOR CHILD</u></h2>
         <p className="wv-j">Your signature below reflects your express assent to be bound to the terms of this supplemental agreement for your minor child. Your signature also represents your attestation to being the natural guardian of the minor child(ren) listed below, and possessing the legal authority to sign this agreement on their behalf. Please carefully review each section again and ensure that you fully understand the implications of this agreement.</p>
 
         <div className="wv-sigs">

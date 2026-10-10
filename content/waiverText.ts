@@ -2,7 +2,7 @@
  * Plain-text copy of the O'Town release (verbatim from components/forms/WaiverDoc.tsx).
  * Used by the online signing form and the signed PDF. If the wording changes, update both and bump WAIVER_VERSION.
  */
-export const WAIVER_VERSION = "2026-10 (Florida release, adult + minor)";
+export const WAIVER_VERSION = "2026-10b (Florida release, adult + minor)";
 
 export type WaiverBlock = { t: "h" | "p" | "li"; text: string; initial?: "A" | "B" | "C" | "D" | "M" };
 export type WaiverPage = { title: string[]; blocks: WaiverBlock[] };
@@ -16,7 +16,7 @@ export const WAIVER_PAGES: WaiverPage[] = [
     "blocks": [
       {
         "t": "p",
-        "text": "Please read the following agreement carefully BEFORE DECIDING TO PARTICIPATE. By signing this document and initialing the required sections, YOU ARE EXPRESSLY AGREEING TO HAVE KNOWLINGLY, FULLY AND TOTALLY RELEASED the Owner/Company/His Agents and Employees (hereinafter “the Released”) FROM ANY AND ALL CLAIMS, INCLUDING ACTIVE OR PASSIVE NEGLIGENCE BUT EXCLUDING GROSS NEGLIGENCE AND/OR INTENTIONAL MISCONDUCT, arising out of any act, omission, or condition existing prior to the signing of the agreement, and extending to include any act, omission, or condition in any way connected with your participation in (including transit to and from) these water sports activities, occurring at any point in the future from the activities in which you are about to purchase/engage."
+        "text": "Please read the following agreement carefully BEFORE DECIDING TO PARTICIPATE. By signing this document and initialing the required sections, YOU ARE EXPRESSLY AGREEING TO HAVE KNOWINGLY, FULLY AND TOTALLY RELEASED the Owner/Company/His Agents and Employees (hereinafter “the Released”) FROM ANY AND ALL CLAIMS, INCLUDING ACTIVE OR PASSIVE NEGLIGENCE BUT EXCLUDING GROSS NEGLIGENCE AND/OR INTENTIONAL MISCONDUCT, arising out of any act, omission, or condition existing prior to the signing of the agreement, and extending to include any act, omission, or condition in any way connected with your participation in (including transit to and from) these water sports activities, occurring at any point in the future from the activities in which you are about to purchase/engage."
       },
       {
         "t": "h",
@@ -77,7 +77,7 @@ export const WAIVER_PAGES: WaiverPage[] = [
       },
       {
         "t": "h",
-        "text": "B. INDEMINITY AGREEMENT STATEMENT"
+        "text": "B. INDEMNITY AGREEMENT STATEMENT"
       },
       {
         "t": "p",
@@ -90,7 +90,7 @@ export const WAIVER_PAGES: WaiverPage[] = [
       },
       {
         "t": "p",
-        "text": "By initialing this section and signing this WAIVER below, YOU ARE AGREEING TO KNOWINGLY, VOLUNTARILY, AND UNEQUIVICALLY WAIVE ANY AND ALL CLAIMS, INCLUDING ACTIVE OR PASSIVE NEGLIGENCE BUT EXCLUDING GROSS NEGLIGENCE OR INTENTIONAL MISCONDUCT, against the Released arising out of any act, omission, or condition existing prior to the signing of the agreement, and extending to any act, omission, or condition in any way connected with your participation in (including transit to and from) these water sports activities occurring at any point in the future. THIS WAIVER AND RELEASE OF LIABILITY IS EXPRESSLY PROVIDED TO EXCULPATE THE RELEASED FROM THOSE LIABILITIES WHICH ARE SEPARATE FROM AND IN ADDITION TO THE POTENTIAL LIABILITIES CREATED BY THE RISKS INHERENT IN WATER SPORTS PARTICIPATION. Furthermore, by initialing and signing this waiver below, you are binding your spouse, heirs, assigns, and any similarly situated personal or legal representative to the waiver’s terms.",
+        "text": "By initialing this section and signing this WAIVER below, YOU ARE AGREEING TO KNOWINGLY, VOLUNTARILY, AND UNEQUIVOCALLY WAIVE ANY AND ALL CLAIMS, INCLUDING ACTIVE OR PASSIVE NEGLIGENCE BUT EXCLUDING GROSS NEGLIGENCE OR INTENTIONAL MISCONDUCT, against the Released arising out of any act, omission, or condition existing prior to the signing of the agreement, and extending to any act, omission, or condition in any way connected with your participation in (including transit to and from) these water sports activities occurring at any point in the future. THIS WAIVER AND RELEASE OF LIABILITY IS EXPRESSLY PROVIDED TO EXCULPATE THE RELEASED FROM THOSE LIABILITIES WHICH ARE SEPARATE FROM AND IN ADDITION TO THE POTENTIAL LIABILITIES CREATED BY THE RISKS INHERENT IN WATER SPORTS PARTICIPATION. Furthermore, by initialing and signing this waiver below, you are binding your spouse, heirs, assigns, and any similarly situated personal or legal representative to the waiver’s terms.",
         "initial": "C"
       },
       {
@@ -132,7 +132,7 @@ export const WAIVER_PAGES: WaiverPage[] = [
       },
       {
         "t": "h",
-        "text": "EFFECT OF FLORIDA LAW ON A LEGAL GUARDIAN’S ABILITY TO WAIVE CLAIMS OF NEGLIGENCE ON BEHALF OF COMMERICAL ENTITIES FOR INJURIES, DEATH OR LOSS EXPERIENCED BY THEIR MINOR CHILDREN"
+        "text": "EFFECT OF FLORIDA LAW ON A LEGAL GUARDIAN’S ABILITY TO WAIVE CLAIMS OF NEGLIGENCE ON BEHALF OF COMMERCIAL ENTITIES FOR INJURIES, DEATH OR LOSS EXPERIENCED BY THEIR MINOR CHILDREN"
       },
       {
         "t": "p",
@@ -141,7 +141,7 @@ export const WAIVER_PAGES: WaiverPage[] = [
       },
       {
         "t": "h",
-        "text": "NATURAL GUARDIAN’S ACKNOWLEDGEMENT OF LIMITED RELEASE ON BEHALF OF MINOR CHILD"
+        "text": "NATURAL GUARDIAN’S ACKNOWLEDGMENT OF LIMITED RELEASE ON BEHALF OF MINOR CHILD"
       },
       {
         "t": "p",
