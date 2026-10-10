@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Accordion from "@/components/Accordion";
+import Accordion from "@/components/ui/Accordion";
 import { contact, faqs, rates } from "@/content/site";
 
 export const metadata: Metadata = {

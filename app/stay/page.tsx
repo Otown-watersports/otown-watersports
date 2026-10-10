@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import MediaGallery from "@/components/MediaGallery";
-import VideoDialog from "@/components/VideoDialog";
+import MediaGallery from "@/components/media/MediaGallery";
+import VideoDialog from "@/components/media/VideoDialog";
 import { contact } from "@/content/site";
 
 export const metadata: Metadata = {

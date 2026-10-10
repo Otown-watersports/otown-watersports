@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import HeroSlider from "@/components/HeroSlider";
-import RiderSpotlight from "@/components/RiderSpotlight";
-import BoatViewer from "@/components/BoatViewer";
-import BoatPolaroids from "@/components/BoatPolaroids";
-import MediaGallery from "@/components/MediaGallery";
+import HeroSlider from "@/components/home/HeroSlider";
+import RiderSpotlight from "@/components/riders/RiderSpotlight";
+import BoatViewer from "@/components/home/BoatViewer";
+import BoatPolaroids from "@/components/home/BoatPolaroids";
+import MediaGallery from "@/components/media/MediaGallery";
 import { boat, contact, experiences, glen } from "@/content/site";
 import { getLatestReels } from "@/lib/instagram";
 import { imgUrl } from "@/lib/img";

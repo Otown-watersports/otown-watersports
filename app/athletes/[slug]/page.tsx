@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { riders } from "@/content/site";
 import { riderBios } from "@/content/riderBios";
 import { riderResults } from "@/content/riderResults";
-import RiderCarousel from "@/components/RiderCarousel";
+import RiderCarousel from "@/components/riders/RiderCarousel";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otownwatersports.com";
 

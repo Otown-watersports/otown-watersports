@@ -154,13 +154,13 @@ export default function BoatViewer({ frames, label, badge }: { frames: number; l
       const v = (e.clientX - lastX) / Math.max(1, now - lastT);
       vel = vel * 0.6 + v * 0.4;
       lastX = e.clientX; lastT = now;
-      goTo(f0 - dx / per());
+      goTo(f0 + dx / per()); // the near side of the boat follows the finger
     };
     const onUp = () => {
       if (!down) return;
       down = false; s.classList.remove("is-dragging");
       if (!dragging || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { dragRef.current = false; goTo(target.current); return; }
-      let v = -vel * 16 / per(); // frames per 16ms
+      let v = vel * 16 / per(); // frames per 16ms
       const run = () => {
         v *= 0.93;
         if (Math.abs(v) < 0.004) { dragRef.current = false; goTo(target.current); return; }
@@ -173,6 +173,33 @@ export default function BoatViewer({ frames, label, badge }: { frames: number; l
     s.addEventListener("pointerup", onUp); s.addEventListener("pointercancel", onUp);
     return () => { stopGlide(); s.removeEventListener("pointerdown", onDown); s.removeEventListener("pointermove", onMove); s.removeEventListener("pointerup", onUp); s.removeEventListener("pointercancel", onUp); };
   }, [ready, frames, goTo]);
+
+  // Rotation bar: press anywhere on the line and slide (the native range only grabs its thumb on iPhone)
+  const barRef = useRef<HTMLDivElement>(null);
+  const setFromX = useCallback((clientX: number) => {
+    const el = barRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const v = Math.min(1, Math.max(0, (clientX - r.left) / r.width)) * frames;
+    const cur = target.current;
+    let d = v - wrap(cur);
+    if (d > frames / 2) d -= frames; else if (d < -frames / 2) d += frames;
+    goTo(cur + d);
+  }, [frames, wrap, goTo]);
+  const barDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!ready || (e.pointerType === "mouse" && e.button !== 0)) return;
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    e.currentTarget.classList.add("is-active");
+    setFromX(e.clientX);
+  };
+  const barMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) setFromX(e.clientX);
+  };
+  const barUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.classList.remove("is-active");
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+  };
 
   const deg = Math.round((value / frames) * 360) % 360;
   const pct = (value / frames) * 100;
@@ -203,7 +230,8 @@ export default function BoatViewer({ frames, label, badge }: { frames: number; l
       </div>
 
       <div className="boat-bar">
-        <div className="boat-range" style={{ ["--pct" as string]: `${pct}%` }}>
+        <div ref={barRef} className="boat-range" style={{ ["--pct" as string]: `${pct}%` }}
+          onPointerDown={barDown} onPointerMove={barMove} onPointerUp={barUp} onPointerCancel={barUp}>
           <span className="boat-range__track" aria-hidden />
           <input
             type="range" min={0} max={frames} step={0.02} value={value} disabled={!ready}

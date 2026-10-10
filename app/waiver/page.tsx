@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import WaiverDoc from "@/components/WaiverDoc";
-import PrintButton from "@/components/PrintButton";
+import WaiverDoc from "@/components/forms/WaiverDoc";
+import PrintButton from "@/components/forms/PrintButton";
 import { contact } from "@/content/site";
 
 export const metadata: Metadata = {

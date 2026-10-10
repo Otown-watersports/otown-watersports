@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { heroSlides, contact } from "@/content/site";
-import VideoDialog from "./VideoDialog";
-import Magnetic from "./Magnetic";
+import VideoDialog from "@/components/media/VideoDialog";
+import Magnetic from "@/components/ui/Magnetic";
 import { imgUrl } from "@/lib/img";
 
 const DURATION = 6500;

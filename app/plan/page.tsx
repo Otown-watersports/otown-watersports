@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import InquiryForm from "@/components/InquiryForm";
+import InquiryForm from "@/components/forms/InquiryForm";
 import { contact } from "@/content/site";
 
 export const metadata: Metadata = {

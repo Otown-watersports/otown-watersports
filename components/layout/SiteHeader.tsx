@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import Magnetic from "./Magnetic";
+import Magnetic from "@/components/ui/Magnetic";
 import { imgUrl } from "@/lib/img";
 
 const links = [

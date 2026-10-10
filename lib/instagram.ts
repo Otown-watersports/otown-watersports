@@ -4,7 +4,7 @@ export type IgPost = { id: string; caption: string; image: string; href: string 
 
 type BeholdPost = { id: string; permalink: string; mediaType?: string; isReel?: boolean; mediaUrl?: string; thumbnailUrl?: string; caption?: string; sizes?: Record<string, { mediaUrl?: string }> };
 
-/** Easiest option: a Behold.so JSON feed (Glen logs in to behold.so once; paste the feed URL into BEHOLD_FEED_URL on Vercel). */
+/** Easiest option: a Behold.so JSON feed (Glen logs in to behold.so once; add the feed URL as BEHOLD_FEED_URL in Cloudflare build variables). */
 async function fromBehold(url: string, limit: number): Promise<IgPost[] | null> {
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } });

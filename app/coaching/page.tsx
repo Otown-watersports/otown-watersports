@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import RiderSpotlight from "@/components/RiderSpotlight";
+import RiderSpotlight from "@/components/riders/RiderSpotlight";
 import { glen, method, riders } from "@/content/site";
 
 export const metadata: Metadata = {

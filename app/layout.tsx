@@ -2,10 +2,10 @@ import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/manrope";
 import "@fontsource-variable/archivo/wdth.css";
 import "./globals.css";
-import SiteHeader from "@/components/SiteHeader";
-import SiteFooter from "@/components/SiteFooter";
-import SmoothAnchors from "@/components/SmoothAnchors";
-import Reveal from "@/components/Reveal";
+import SiteHeader from "@/components/layout/SiteHeader";
+import SiteFooter from "@/components/layout/SiteFooter";
+import SmoothAnchors from "@/components/layout/SmoothAnchors";
+import Reveal from "@/components/ui/Reveal";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://otownwatersports.com";
 
