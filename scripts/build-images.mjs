@@ -31,7 +31,7 @@ await Promise.all(
         const dest = path.join(OUT, `${rel}-${w}.webp`);
         try { if ((await stat(dest)).mtimeMs >= src.mtimeMs) continue; } catch {}
         await mkdir(path.dirname(dest), { recursive: true });
-        await sharp(file).rotate().resize({ width: w, withoutEnlargement: true }).webp({ quality: 78, effort: 4 }).toFile(dest);
+        await sharp(file).rotate().resize({ width: w, withoutEnlargement: true }).webp({ quality: 85, effort: 4 }).toFile(dest);
         made++;
       }
     }
