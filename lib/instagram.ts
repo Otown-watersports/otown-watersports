@@ -4,33 +4,39 @@ export type IgPost = { id: string; caption: string; image: string; href: string 
 
 type BeholdPost = { id: string; permalink: string; mediaType?: string; isReel?: boolean; mediaUrl?: string; thumbnailUrl?: string; caption?: string; sizes?: Record<string, { mediaUrl?: string }> };
 
-/** Easiest option: a Behold.so JSON feed (Glen logs in to behold.so once; add the feed URL as BEHOLD_FEED_URL in Cloudflare build variables). */
+/** Turns a Behold.so JSON feed into cards. Prefers reels/videos; falls back to any post with an image. */
+export function parseBehold(json: unknown, limit: number): IgPost[] | null {
+  const j = json as BeholdPost[] | { posts?: BeholdPost[] };
+  const posts = Array.isArray(j) ? j : j?.posts ?? [];
+  const pick = (p: BeholdPost) => p.sizes?.medium?.mediaUrl ?? p.sizes?.large?.mediaUrl ?? p.thumbnailUrl ?? (p.mediaType === "VIDEO" ? undefined : p.mediaUrl);
+  const vids = posts.filter((p) => (p.mediaType === "VIDEO" || p.isReel) && pick(p));
+  const list = (vids.length >= 3 ? vids : posts.filter((p) => pick(p))).slice(0, limit);
+  if (!list.length) return null;
+  return list.map((p) => ({ id: p.id, caption: tidy(p.caption), image: pick(p)!, href: p.permalink }));
+}
+
+/** Easiest option: a Behold.so JSON feed. Glen logs in to behold.so once; the feed URL goes in NEXT_PUBLIC_BEHOLD_FEED_URL (Cloudflare build variable). */
 async function fromBehold(url: string, limit: number): Promise<IgPost[] | null> {
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
-    const json = (await res.json()) as BeholdPost[] | { posts?: BeholdPost[] };
-    const posts = Array.isArray(json) ? json : json.posts ?? [];
-    const pick = (p: BeholdPost) => p.sizes?.medium?.mediaUrl ?? p.sizes?.large?.mediaUrl ?? p.thumbnailUrl ?? (p.mediaType === "VIDEO" ? undefined : p.mediaUrl);
-    const vids = posts.filter((p) => (p.mediaType === "VIDEO" || p.isReel) && pick(p));
-    const list = (vids.length >= 3 ? vids : posts.filter((p) => pick(p))).slice(0, limit);
-    if (!list.length) return null;
-    return list.map((p) => ({ id: p.id, caption: tidy(p.caption), image: pick(p)!, href: p.permalink }));
+    return parseBehold(await res.json(), limit);
   } catch {
     return null;
   }
 }
 
+/** Public Behold feed URL (safe to expose: it is read-only and meant for browsers). */
+export const BEHOLD_FEED_URL = process.env.NEXT_PUBLIC_BEHOLD_FEED_URL || process.env.BEHOLD_FEED_URL || "";
+
 /**
- * Latest reels from @fletcherotown. Order: BEHOLD_FEED_URL (simplest) → INSTAGRAM_TOKEN (Instagram API) → hand-picked list.
- * Latest reels from @fletcherotown via the Instagram API (Instagram Login, long-lived token in INSTAGRAM_TOKEN).
- * Refreshes at most once an hour. Without a token, or if Instagram is unreachable, the hand-picked list in content/site.ts is shown.
+ * Latest reels from @fletcherotown at build time. Order: Behold feed (simplest) → INSTAGRAM_TOKEN (Instagram API) → hand-picked list.
+ * The browser then refreshes from Behold on each visit (see ReelRail), so the site stays current without a redeploy.
  */
 export async function getLatestReels(limit = 6): Promise<IgPost[]> {
   const fallback = igPosts.map((p) => ({ id: p.id, caption: p.caption, image: p.image, href: `https://www.instagram.com/reel/${p.id}/` }));
-  const behold = process.env.BEHOLD_FEED_URL;
-  if (behold) {
-    const got = await fromBehold(behold, limit);
+  if (BEHOLD_FEED_URL) {
+    const got = await fromBehold(BEHOLD_FEED_URL, limit);
     if (got) return got;
   }
   const token = process.env.INSTAGRAM_TOKEN;

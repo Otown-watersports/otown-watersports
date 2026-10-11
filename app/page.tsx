@@ -6,8 +6,8 @@ import BoatViewer from "@/components/home/BoatViewer";
 import BoatPolaroids from "@/components/home/BoatPolaroids";
 import MediaGallery from "@/components/media/MediaGallery";
 import { boat, contact, experiences, glen } from "@/content/site";
-import { getLatestReels } from "@/lib/instagram";
-import { imgUrl } from "@/lib/img";
+import { getLatestReels, BEHOLD_FEED_URL } from "@/lib/instagram";
+import ReelRail from "@/components/home/ReelRail";
 
 const Arrow = () => (
   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" /></svg>
@@ -151,17 +151,7 @@ export default async function Home() {
           <h2 id="ig-title" className="display display--md display--ink">Latest from the lake</h2>
           <a className="u-link" href={contact.instagram.href} target="_blank" rel="noreferrer">Follow {contact.instagram.label}</a>
         </div>
-        <ul className="ig__rail">
-          {reels.map((p) => (
-            <li key={p.id}>
-              <a href={p.href} target="_blank" rel="noreferrer" className="ig__card">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={imgUrl(p.image, 384)} alt="" loading="lazy" width={360} height={640} />
-                <span className="ig__cap">{p.caption}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <ReelRail initial={reels} feedUrl={BEHOLD_FEED_URL || undefined} />
       </section>
 
       {/* Closing call to action */}

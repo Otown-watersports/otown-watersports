@@ -51,7 +51,9 @@ npm run build    # builds the static site into out/
 ## Hosting
 - **Site:** Cloudflare Workers (static assets), account info@otownwatersports.com. Build `npm run build`, deploy `npx wrangler deploy`.
 - **Domain:** registered at Register.com (Network Solutions); nameservers point to Cloudflare. All DNS is managed in Cloudflare.
-- **Email:** currently hosted at GreenGeeks (`mail.otownwatersports.com`). The MX record points there.
+- **Email:** Google Workspace (hello@otownwatersports.com, with info@ as an alias). MX, SPF, DKIM and DMARC are set in Cloudflare DNS.
+- **Instagram feed ("Latest from the lake"):** a free [Behold](https://behold.so) feed. Glen signs in to Behold with the @fletcherotown account, creates a JSON feed, and the feed URL goes in Cloudflare → Workers & Pages → otown-watersports → Settings → Variables and secrets as **`NEXT_PUBLIC_BEHOLD_FEED_URL`** (Build variable). Redeploy once; after that the cards refresh in the browser on every visit. Without it, the hand-picked list in `content/site.ts` (`igPosts`) is shown.
+- **Waiver:** signed online; PDFs go to R2 (`otown-waivers`, auto-deleted after 3 years), Google Drive ("O'Town Signed Waivers/<year>") and email. Runtime variables: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `ADMIN_KEY`, `WAIVER_FROM`.
 
 ## Design system
 - Colours from the O'Town neon sign: Ink `#0B1116`, Neon cyan `#22C7E8`, Electric blue `#2B7DE9`, Pearl `#F4F2EE`, Stone `#E9E5DD`
