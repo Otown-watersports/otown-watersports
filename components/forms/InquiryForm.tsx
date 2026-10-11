@@ -46,7 +46,7 @@ export default function InquiryForm() {
     const data = {
       activity, level,
       name: String(f.get("name") ?? ""), email: String(f.get("email") ?? ""),
-      dates: String(f.get("dates") ?? ""), message: String(f.get("message") ?? ""),
+      dates: String(f.get("dates") ?? ""), phone: String(f.get("phone") ?? ""), message: String(f.get("message") ?? ""),
       website: hp.current?.value ?? "",
     };
     setStatus("sending");
@@ -59,6 +59,7 @@ export default function InquiryForm() {
       const lines = [
         `Name: ${data.name}`, `Email: ${data.email}`,
         `Interested in: ${activities.find((a) => a.value === activity)?.label}`, `Riding level: ${level}`,
+        data.phone ? `Phone: ${data.phone}` : "",
         `Preferred dates: ${data.dates}`,
         data.message ? `\nWhat I'd like to work on:\n${data.message}` : "",
       ].filter(Boolean);
@@ -112,7 +113,8 @@ export default function InquiryForm() {
       <div className="inquiry__grid">
         <label className="field"><span>Name</span><input name="name" autoComplete="name" required placeholder="Your name" /></label>
         <label className="field"><span>Email</span><input name="email" type="email" autoComplete="email" required placeholder="you@email.com" /></label>
-        <label className="field field--full"><span>Preferred dates</span><input name="dates" required placeholder="e.g. 12 to 14 March, mornings" /></label>
+        <label className="field"><span>Phone <em>optional</em></span><input name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="(407) 555-1212" /></label>
+        <label className="field"><span>Preferred dates</span><input name="dates" required placeholder="e.g. 12 to 14 March, mornings" /></label>
         <input ref={hp} name="website" tabIndex={-1} autoComplete="off" className="ws__hp" aria-hidden />
         <label className="field field--full"><span>What are you working on? <em>optional</em></span><textarea name="message" rows={3} placeholder="Getting up for the first time, a 180, your first invert…" /></label>
       </div>
