@@ -99,10 +99,11 @@ const utf8b64 = (s: string) => btoa(String.fromCharCode(...new TextEncoder().enc
 const wrap76 = (s: string) => s.replace(/.{1,76}/g, "$&\r\n");
 
 /** Send an email with the PDF attached through the connected Gmail account. */
-export async function gmailSend(env: GoogleEnv, cfg: GoogleConfig, o: { to: string; replyTo?: string; subject: string; html: string; filename: string; pdfB64: string }) {
+export async function gmailSend(env: GoogleEnv, cfg: GoogleConfig, o: { to: string; replyTo?: string; subject: string; html: string; filename: string; pdfB64: string; from?: string }) {
   const boundary = `b_${crypto.randomUUID()}`;
   const mime = [
-    `From: O'Town Watersports <${cfg.email}>`,
+    // WAIVER_FROM may name an alias of the connected account (e.g. info@); Gmail accepts it once "Send mail as" is set up
+    `From: ${o.from || `O'Town Watersports <${cfg.email}>`}`,
     `To: ${o.to}`,
     ...(o.replyTo ? [`Reply-To: ${o.replyTo}`] : []),
     `Subject: =?UTF-8?B?${utf8b64(o.subject)}?=`,

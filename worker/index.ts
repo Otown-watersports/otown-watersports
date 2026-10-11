@@ -173,7 +173,8 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
     } catch { /* fall through to email */ }
   }
   const b64 = toBase64(pdfBuf);
-  const owner = env.WAIVER_TO || google?.email || "info@otownwatersports.com";
+  // owner copy goes to WAIVER_TO, else to the address in WAIVER_FROM, else to the connected account
+  const owner = env.WAIVER_TO || env.WAIVER_FROM?.match(/<([^>]+)>/)?.[1] || env.WAIVER_FROM || google?.email || "info@otownwatersports.com";
   if (google) {
     drive = await driveUpload(env, google, filename, pdfBuf, `${who} · signed ${now.toISOString()} · SHA-256 ${hash}`).catch(() => false);
   }
@@ -219,7 +220,7 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
       <p style="margin:0">See you on the water!<br><b>Glen &amp; the O'Town Watersports team</b></p>`);
     const send = (to: string, subject: string, html: string, replyTo?: string) =>
       google
-        ? gmailSend(env, google, { to, replyTo, subject, html, filename, pdfB64: b64 })
+        ? gmailSend(env, google, { to, replyTo, subject, html, filename, pdfB64: b64, from: env.WAIVER_FROM })
         : sendEmail(env, to, subject, html, filename, b64, replyTo);
     emailed = await send(owner, `Signed waiver${s.trampoline ? " + trampoline release" : ""}: ${who}`, ownerHtml, s.signer.email).catch(() => false);
     await send(s.signer.email, "Your signed O'Town Watersports waiver", riderHtml).catch(() => false);
