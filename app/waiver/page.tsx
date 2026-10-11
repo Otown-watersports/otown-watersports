@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import WaiverDoc from "@/components/forms/WaiverDoc";
 import PrintButton from "@/components/forms/PrintButton";
 import WaiverSign from "@/components/forms/WaiverSign";
@@ -21,17 +20,12 @@ export default function WaiverPage() {
             <h1 className="display display--lg">The waiver.</h1>
           </div>
           <div className="wv-intro__side">
-            <p>Every rider signs the O’Town Watersports release before riding. Adults sign for themselves; for riders under 18, a parent or natural guardian signs. Using the trampoline on the dock? Tick the trampoline release in the same form.</p>
-            <ol className="wv-steps">
-              <li>Sign online below in about 3 minutes. Done before you arrive.</li>
-              <li>You and O’Town each get the signed PDF by email.</li>
-              <li>Prefer paper? Print it, initial sections A to D, sign and bring it.</li>
-            </ol>
+            <p>Every rider signs before riding. Under 18? A parent signs. Takes about 3 minutes online; you both get the PDF by email.</p>
             <div className="actions">
               <a className="btn btn--primary btn--pill" href="#sign">Sign online <span aria-hidden>→</span></a>
               <a className="btn btn--outline-light btn--pill" href="/docs/otown-waiver.pdf" download="OTown-Watersports-Waiver.pdf">Download PDF <span aria-hidden>↓</span></a>
             </div>
-            <p className="wv-intro__q">Questions? Call <a href={contact.phone.href}>{contact.phone.label}</a> or <Link href="/plan">plan your session</Link>.</p>
+            <p className="wv-intro__q">Questions? Call <a href={contact.phone.href}>{contact.phone.label}</a>.</p>
           </div>
         </div>
       </section>

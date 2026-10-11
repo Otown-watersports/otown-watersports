@@ -101,11 +101,11 @@ export default async function Home() {
         <div className="wrap">
           <div className="boat__head" data-reveal>
             <div>
-              <p className="eyebrow eyebrow--cyan">New for {boat.year} · {boat.make} {boat.model}</p>
+              <p className="eyebrow eyebrow--cyan">The boat · {boat.make} {boat.model}</p>
               <h2 id="boat-title" className="display display--lg">A brand new boat.<br />Experienced hands.</h2>
             </div>
             <p className="boat__copy">
-              O’Town now rides behind a new {boat.year} {boat.make} {boat.model}: a clean, consistent wake to learn and progress on. What matters just as much is who’s driving: speed, line length and timing, tuned to the rider behind the boat.
+              O’Town rides behind the latest {boat.make} {boat.model}: a clean, consistent wake to learn and progress on. What matters just as much is who’s driving: speed, line length and timing, tuned to the rider behind the boat.
             </p>
           </div>
           <div className="boat__row">
@@ -115,7 +115,7 @@ export default async function Home() {
             <BoatPolaroids />
           </div>
           <div className="boat__foot">
-            <p>Proudly riding behind a {boat.year} {boat.make}{boat.model ? ` ${boat.model}` : ""}.</p>
+            <p>Proudly riding behind the latest {boat.make}{boat.model ? ` ${boat.model}` : ""}.</p>
             <a className="btn btn--glass btn--pill" href={boat.link} target="_blank" rel="noreferrer">
               Explore the {boat.make}{boat.model ? ` ${boat.model}` : ""} <Arrow />
             </a>

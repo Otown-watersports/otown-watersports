@@ -700,7 +700,7 @@ a:hover > .flip .flip__b, a:focus-visible > .flip .flip__b { transform: translat
 .btn--outline-light:hover { border-color: #fff; }
 .wv-intro { background: var(--ink); color: #fff; padding: calc(var(--header-h) + 64px) 0 72px; }
 .wv-intro__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; }
-.wv-intro__side > p:first-child { color: rgba(244,242,238,.82); max-width: 46ch; }
+.wv-intro__side > p:first-child { color: rgba(244,242,238,.82); max-width: 40ch; margin-bottom: 26px; }
 .wv-steps { margin: 22px 0 26px; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 10px; }
 .wv-steps li { counter-increment: s; display: flex; gap: 14px; align-items: baseline; }
 .wv-steps li::before { content: "0" counter(s); font-family: var(--display); font-weight: 700; color: var(--cyan); font-size: 13px; letter-spacing: .06em; }

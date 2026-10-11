@@ -219,7 +219,6 @@ export const boat = {
   /** O'Town's new boat is a Supra SL (owner + @fletcherotown, Sept 2026).
    *  NOTE: the 360° render was recorded from a configurator build that carries an SV badge — re-record an SL build to match. */
   model: "SL 450" as string | null,
-  year: 2027,
   make: "Supra",
   link: "https://www.supraboats.com/boats/sl",
   frames: 36,

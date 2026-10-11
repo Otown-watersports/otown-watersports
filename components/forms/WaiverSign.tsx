@@ -210,8 +210,8 @@ export default function WaiverSign() {
       <form className="wrap ws__form" onSubmit={submit} onChange={() => error && setError("")} noValidate>
         <div className="ws__head">
           <p className="eyebrow eyebrow--cyan">Sign online</p>
-          <h2 id="ws-title" className="display display--md">Sign the waiver in 3 minutes.</h2>
-          <p>No printing. Fill in your details, initial each section, sign with your finger and you’re done. O’Town gets your signed copy instantly and you get one by email.</p>
+          <h2 id="ws-title" className="display display--md">Sign the waiver.</h2>
+          <p>Fill in your details, initial each section and sign with your finger.</p>
         </div>
 
         <fieldset className="chips">
@@ -225,7 +225,7 @@ export default function WaiverSign() {
 
         <label className="ws__check ws__check--card">
           <input type="checkbox" checked={trampoline} onChange={(e) => setTrampoline(e.target.checked)} />
-          <span><b>Also sign the trampoline release</b> (optional). Covers use of the trampoline on the dock, now and for the next 5 years. Adds one short section to initial.</span>
+          <span><b>Also sign the trampoline release</b> (optional). For the trampoline on the dock, valid 5 years. One extra section to initial.</span>
         </label>
 
         <div className="inquiry__grid">
