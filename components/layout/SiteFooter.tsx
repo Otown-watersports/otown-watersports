@@ -56,7 +56,7 @@ export default function SiteFooter() {
         <div className="site-footer__base">
           <span>© {new Date().getFullYear()} O’Town Watersports</span>
           <span>Lake Barton, Orlando · Open every week of the year</span>
-          <a className="site-footer__credit" href="https://amkcode.app" target="_blank" rel="noopener">Site by <b>AMK.code</b></a>
+          <a className="site-footer__credit" href="https://amkcode.app" target="_blank" rel="noopener" aria-label="Website designed and built by AMK.code">Designed &amp; built by <b>AMK.code</b> <span aria-hidden>↗</span></a>
         </div>
       </div>
     </footer>
