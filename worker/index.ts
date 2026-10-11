@@ -55,11 +55,11 @@ const prettyPhone = (p: string) => { const d = p.replace(/\D/g, ""); return d.le
 const clean = (s: unknown, max = 120) => (typeof s === "string" ? s.replace(/[\u0000-\u001f]/g, " ").trim().slice(0, max) : "");
 const slug = (s: string) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "rider";
 /** Simple, mobile-friendly email frame in the site's colours. */
-const layout = (title: string, body: string) => `<!doctype html><html><body style="margin:0;background:#eef0f2;padding:24px 12px">
-<table cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden;font:15px/1.55 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#1d2328">
-<tr><td style="background:#0b1116;padding:22px 28px"><span style="font-size:20px;font-weight:800;letter-spacing:.02em;color:#22c7e8">O'TOWN</span> <span style="font-size:11px;letter-spacing:.2em;color:#f4f2ee;text-transform:uppercase">Watersports</span></td></tr>
-<tr><td style="padding:28px"><h1 style="margin:0 0 14px;font-size:22px;line-height:1.25">${title}</h1>${body}</td></tr>
-<tr><td style="padding:16px 28px;background:#f4f2ee;font-size:12px;color:#667">O'Town Watersports · 5220 E Colonial Dr, Orlando, FL 32807 · <a href="https://otownwatersports.com" style="color:#667">otownwatersports.com</a></td></tr>
+const layout = (title: string, body: string) => `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"></head><body style="margin:0;background:#eef0f2;padding:16px 8px">
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:560px;margin:0 auto;background:#fff;border-radius:14px;font:15px/1.55 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#1d2328">
+<tr><td style="background:#0b1116;padding:18px 22px;border-radius:14px 14px 0 0"><span style="font-size:20px;font-weight:800;letter-spacing:.02em;color:#22c7e8">O'TOWN</span> <span style="font-size:11px;letter-spacing:.2em;color:#f4f2ee;text-transform:uppercase">Watersports</span></td></tr>
+<tr><td style="padding:22px"><h1 style="margin:0 0 14px;font-size:21px;line-height:1.25;word-break:break-word">${title}</h1>${body}</td></tr>
+<tr><td style="padding:14px 22px;background:#f4f2ee;font-size:12px;line-height:1.5;color:#667;border-radius:0 0 14px 14px">O'Town Watersports · 5220 E Colonial Dr, Orlando, FL 32807<br><a href="https://otownwatersports.com" style="color:#667">otownwatersports.com</a></td></tr>
 </table></body></html>`;
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
@@ -196,8 +196,8 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
       ["Documents", s.trampoline ? "Water sports release + trampoline release (5 years)" : "Water sports release"],
       ["Signed", `${now.toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "medium", timeStyle: "short" })} ET, from ${device}`],
     ];
-    const table = `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:14px">${rows.map(([k, val], i) => `<tr><td style="padding:9px 12px;color:#667;background:${i % 2 ? "#fff" : "#f4f2ee"};white-space:nowrap;vertical-align:top">${esc(k)}</td><td style="padding:9px 12px;background:${i % 2 ? "#fff" : "#f4f2ee"}"><b>${esc(val)}</b></td></tr>`).join("")}</table>
-      <p style="margin:16px 0 0;font-size:12px;color:#889">Record ${id} · IP ${esc(audit.ip)} (${esc(audit.country)}) · file fingerprint ${hash.slice(0, 12)}… · full details are stored with the PDF.</p>`;
+    const table = `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;font-size:14px">${rows.map(([k, val], i) => `<tr><td style="padding:8px 10px;color:#667;background:${i % 2 ? "#fff" : "#f4f2ee"};vertical-align:top;width:34%">${esc(k)}</td><td style="padding:8px 10px;background:${i % 2 ? "#fff" : "#f4f2ee"};word-break:break-word"><b>${esc(val)}</b></td></tr>`).join("")}</table>
+      <p style="margin:16px 0 0;font-size:12px;line-height:1.5;color:#889;word-break:break-word">Record ${id} · from ${esc(audit.ip)} (${esc(audit.country)}) · file ${hash.slice(0, 12)}…<br>Full details are stored with the PDF.</p>`;
     const saved = [stored && "Cloudflare", drive && "Google Drive"].filter(Boolean).join(" and ");
     const signedOn = now.toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "long", timeStyle: "short" });
     const ownerHtml = layout(`${who} signed the waiver`, `
@@ -206,7 +206,7 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
     const riders = s.kind === "adult" ? "you" : s.minors.length === 1 ? esc(s.minors[0].name) : `${s.minors.map((m) => esc(m.name)).join(", ")}`;
     const riderHtml = layout(`You're all set, ${first}!`, `
       <p style="margin:0 0 14px">Thanks for signing the O'Town Watersports waiver${s.kind === "adult" ? "" : ` for ${riders}`}. Your signed copy is attached to this email. Keep it for your records; no need to print anything.</p>
-      <table cellpadding="0" cellspacing="0" style="margin:18px 0;border-collapse:collapse;width:100%">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:18px 0;border-collapse:collapse">
         <tr><td style="padding:10px 14px;background:#f4f2ee;border-radius:8px 8px 0 0;font-size:13px;color:#667">Signed</td><td style="padding:10px 14px;background:#f4f2ee;border-radius:8px 8px 0 0;font-size:14px"><b>${esc(signedOn)} (Eastern)</b></td></tr>
         <tr><td style="padding:10px 14px;background:#f4f2ee;font-size:13px;color:#667">Rider${s.minors.length > 1 ? "s" : ""}</td><td style="padding:10px 14px;background:#f4f2ee;font-size:14px"><b>${s.kind === "adult" ? esc(s.signer.name) : riders}</b></td></tr>
         <tr><td style="padding:10px 14px;background:#f4f2ee;border-radius:0 0 8px 8px;font-size:13px;color:#667">Reference</td><td style="padding:10px 14px;background:#f4f2ee;border-radius:0 0 8px 8px;font-size:14px"><b>${id}</b></td></tr>
@@ -222,7 +222,8 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
       google
         ? gmailSend(env, google, { to, replyTo, subject, html, filename, pdfB64: b64, from: env.WAIVER_FROM })
         : sendEmail(env, to, subject, html, filename, b64, replyTo);
-    emailed = await send(owner, `[Waiver] ${who}${s.trampoline ? " (+ trampoline)" : ""} · ${day}`, ownerHtml, s.signer.email).catch(() => false);
+    const shortDate = now.toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
+    emailed = await send(owner, `[Waiver] ${who}${s.trampoline ? " +trampoline" : ""} · ${shortDate}`, ownerHtml, s.signer.email).catch(() => false);
     await send(s.signer.email, "Your signed O'Town Watersports waiver", riderHtml).catch(() => false);
   }
   if (!stored && !emailed && !drive) return json({ error: "We couldn't save your waiver. Please try again, or download and print it." }, 502);
