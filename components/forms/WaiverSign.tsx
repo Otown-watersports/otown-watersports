@@ -84,11 +84,15 @@ function SignaturePad({ onChange }: { onChange: (png: string | null) => void }) 
     return () => { c.removeEventListener("pointerdown", start); c.removeEventListener("pointermove", move); c.removeEventListener("pointerup", end); c.removeEventListener("pointercancel", end); };
   }, [onChange]);
   const clear = () => { const c = ref.current!; c.getContext("2d")!.clearRect(0, 0, c.width, c.height); drawn.current = false; ink.current = 0; onChange(null); };
+  const [signed, setSigned] = useState(false);
+  const [drawing, setDrawing] = useState(false);
   return (
-    <div className="ws-pad">
+    <div className={`ws-pad${signed ? " is-signed" : ""}${drawing ? " is-drawing" : ""}`}
+      onPointerDown={() => setDrawing(true)} onPointerUp={() => { setDrawing(false); setSigned(ink.current > 60); }} onPointerCancel={() => setDrawing(false)}>
       <canvas ref={ref} aria-label="Signature area: sign with your finger or mouse" />
+      <span className="ws-pad__hint" aria-hidden>Draw your signature with your finger or mouse</span>
       <span className="ws-pad__line" aria-hidden>Sign here</span>
-      <button type="button" className="ws-pad__clear" onClick={clear}>Clear</button>
+      <button type="button" className="ws-pad__clear" onClick={() => { clear(); setSigned(false); }}>Clear</button>
     </div>
   );
 }
@@ -179,7 +183,7 @@ export default function WaiverSign() {
       setPdfUrl({ url: URL.createObjectURL(blob), name: j.filename || "OTown-Waiver.pdf" });
       try { sessionStorage.removeItem(DRAFT); } catch {}
       setState("done");
-      window.scrollTo({ top: (document.getElementById("sign")?.offsetTop ?? 0) - 80, behavior: "smooth" });
+      requestAnimationFrame(() => { const el = document.getElementById("sign"); el?.scrollIntoView({ behavior: "smooth", block: "start" }); el?.querySelector<HTMLElement>("h2")?.focus(); });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setState("idle");
@@ -193,7 +197,7 @@ export default function WaiverSign() {
       <section id="sign" className="ws">
         <div className="wrap ws__done">
           <p className="eyebrow eyebrow--cyan">Signed</p>
-          <h2 className="display display--md">You’re all set.</h2>
+          <h2 className="display display--md" tabIndex={-1}>You’re all set.</h2>
           <p>Your signed waiver has been sent to O’Town Watersports and a copy is on its way to {signer.email}.</p>
           {pdfUrl && <a className="btn btn--primary btn--pill" href={pdfUrl.url} download={pdfUrl.name}>Download your signed waiver <span aria-hidden>↓</span></a>}
         </div>
@@ -259,6 +263,7 @@ export default function WaiverSign() {
             <input type="tel" autoComplete="off" value={emergency.phone} onChange={(e) => setEmergency({ ...emergency, phone: e.target.value })} /></label>
         </div>
 
+        <div className="ws__docwrap">
         <div className="ws__prog" aria-label="Initials progress">
           <b>Initial:</b>
           {needInitials.map((k) => {
@@ -304,6 +309,7 @@ export default function WaiverSign() {
             </div>
           ))}
         </div>
+        </div>
 
         <div className="ws__sign">
           <p className="ws__label">{kind === "adult" ? "Your signature" : "Parent / guardian signature"}</p>
@@ -313,7 +319,7 @@ export default function WaiverSign() {
         <label className="ws__check"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
           <span>I have read {trampoline ? "both agreements" : "this entire agreement"}, initialed each section, understand that I am giving up legal rights, and agree to be bound by {trampoline ? "them" : "it"}{kind !== "adult" ? ", and I am the natural guardian of the child(ren) listed" : ""}.</span></label>
         <label className="ws__check"><input type="checkbox" checked={esign} onChange={(e) => setEsign(e.target.checked)} />
-          <span>I agree to sign electronically. My electronic signature has the same effect as a handwritten one.</span></label>
+          <span>I agree to do this electronically. My electronic signature has the same legal effect as a handwritten one, and I will receive my signed copy by email.</span></label>
 
         <input ref={hp} name="website" tabIndex={-1} autoComplete="off" className="ws__hp" aria-hidden />
 
@@ -321,7 +327,8 @@ export default function WaiverSign() {
           <button className="btn btn--primary btn--pill btn--lg" type="submit" disabled={state === "sending" || ready === null}>
             {state === "sending" ? "Signing…" : "Sign waiver"} <span aria-hidden>→</span>
           </button>
-          {error && <p className="ws__error" role="alert">{error}</p>}
+          {error ? <p className="ws__error" role="alert">{error}</p>
+            : (() => { const missing = [signer.name.trim().split(/\s+/).length < 2 && "your name", kind !== "minor" && !signer.dob && "date of birth", !signer.email && "email", needInitials.some((k) => !(initials[k] || "").trim()) && "initials", !sig && "signature", (!agree || !esign) && "the two boxes"].filter(Boolean) as string[]; return missing.length ? <p className="ws__missing">Still needed: {missing.join(", ")}</p> : null; })()}
         </div>
       </form>
     </section>

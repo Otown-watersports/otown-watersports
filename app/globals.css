@@ -1130,14 +1130,16 @@ p, li, dd, .lede { text-wrap: pretty; }
 .ws__li { padding-left: 16px; position: relative; margin-bottom: 4px !important; }
 .ws__li::before { content: "•"; position: absolute; left: 2px; }
 .ws__init { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 8px 12px; border-radius: 8px; background: #fff3c4; border: 1px solid #e9cf6b; font-size: 13px; font-weight: 700; }
-.ws__init input { width: 72px; padding: 6px 8px; border: 1px solid #b9a64a; border-radius: 6px; font: inherit; font-size: 16px; text-transform: uppercase; background: #fff; color: #111; }
+.ws__init input { width: 84px; padding: 9px 10px; min-height: 44px; border: 1px solid #b9a64a; border-radius: 8px; font: inherit; font-size: 18px; font-weight: 700; letter-spacing: .08em; text-align: center; text-transform: uppercase; background: #fff; color: #111; }
+.ws__init input:focus { outline: 3px solid var(--cyan); outline-offset: 1px; }
 .ws__label { font-size: 13px; font-weight: 700; letter-spacing: .06em; color: var(--on-dark-soft); margin-bottom: 10px; }
 .ws-pad { position: relative; height: 190px; border-radius: 10px; background: #fbfaf7; overflow: hidden; }
 .ws-pad canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
 .ws-pad__line { position: absolute; left: 24px; right: 24px; bottom: 44px; border-top: 1px solid #b8b2a7; padding-top: 6px; font-size: 12px; color: #8a847a; pointer-events: none; }
 .ws-pad__clear { position: absolute; right: 10px; top: 10px; background: #fff; border: 1px solid #d5d0c7; color: #333; border-radius: 999px; padding: 6px 14px; font: inherit; font-size: 13px; cursor: pointer; }
 .ws__check { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; color: rgba(244,242,238,.88); cursor: pointer; }
-.ws__check input { width: 22px; height: 22px; margin-top: 1px; accent-color: var(--cyan); flex: none; }
+.ws__check input { width: 24px; height: 24px; margin-top: 0; accent-color: var(--cyan); flex: none; }
+.ws__check { min-height: 44px; padding: 6px 0; }
 .ws__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .ws__error { color: #ff9b8f; font-weight: 600; }
 .ws__done { padding-top: clamp(56px, 7vw, 90px); display: grid; gap: 18px; justify-items: start; max-width: 640px; }
@@ -1171,19 +1173,33 @@ p, li, dd, .lede { text-wrap: pretty; }
 .ws__dob select:focus { outline: none; border-color: var(--cyan); }
 .ws__dob-wrap { display: grid; gap: 8px; align-content: start; }
 .ws__init { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 0 0 14px; }
-.ws__init label { display: inline-flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: #fff3c4; border: 1px solid #e9cf6b; font-size: 13px; font-weight: 700; transition: background .3s, border-color .3s; }
+.ws__init label { display: inline-flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: #fff3c4; border: 1px solid #e9cf6b; font-size: 13px; font-weight: 700; transition: background .3s, border-color .3s; cursor: text; }
 .ws__init.is-done label { background: #e4f7ec; border-color: #7fcf9d; }
 .ws__init.is-done label::after { content: "✓"; color: #1d8a4b; font-weight: 800; }
 .ws__init-all { background: none; border: 0; padding: 0; color: #0b7a95; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 700px) { .ws__dob-row { gap: 6px; } .ws__dob select { font-size: 16px; padding: 10px 4px; } }
 
 /* Sticky progress: which sections still need initials */
+.ws__docwrap { position: relative; }
 .ws__prog { position: sticky; top: calc(var(--header-h, 64px) + 8px); z-index: 5; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 14px; margin: 0 0 14px; border-radius: 999px; background: rgba(11,17,22,.92); border: 1px solid rgba(244,242,238,.16); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: #fff; font-size: 13px; font-weight: 600; }
 .ws__prog b { font-weight: 700; margin-right: 4px; color: var(--on-dark-soft); }
-.ws__prog button { font: inherit; border: 1px solid rgba(244,242,238,.3); background: transparent; color: #fff; border-radius: 999px; padding: 4px 11px; cursor: pointer; }
+.ws__prog button { font: inherit; border: 1px solid rgba(244,242,238,.3); background: transparent; color: #fff; border-radius: 999px; padding: 8px 13px; min-height: 40px; cursor: pointer; }
 .ws__prog button.is-done { background: var(--cyan); color: var(--ink); border-color: var(--cyan); }
 .ws__prog button.is-next { border-color: #ffd866; color: #ffd866; }
 .ws__check--card { padding: 14px 16px; border-radius: 12px; background: rgba(244,242,238,.06); border: 1px solid var(--rule-dark); }
 .ws__check--card b { color: #fff; }
 .wv-ol { padding-left: 28px; margin: 14px 0 28px; }
 .wv-ol li { margin-bottom: 12px; text-align: justify; }
+
+/* Signing pad: clearer states */
+.ws-pad { border: 2px solid transparent; transition: border-color .25s; }
+.ws-pad.is-signed { border-color: #7fcf9d; }
+.ws-pad.is-signed .ws-pad__line::after { content: "  ✓ signed"; color: #1d8a4b; font-weight: 700; }
+.ws-pad__hint { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); color: #b8b2a7; font-size: 15px; pointer-events: none; transition: opacity .2s; }
+.ws-pad.is-signed .ws-pad__hint, .ws-pad.is-drawing .ws-pad__hint { opacity: 0; }
+/* Submit button: full width on phones; sticky summary of what's missing */
+@media (max-width: 700px) { .ws .inquiry__foot .btn { width: 100%; justify-content: center; } }
+.ws__missing { font-size: 13px; color: var(--on-dark-soft); }
+
+.ws__done { scroll-margin-top: calc(var(--header-h, 64px) + 16px); }
+.ws__done h2:focus { outline: none; }

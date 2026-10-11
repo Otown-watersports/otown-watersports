@@ -105,9 +105,16 @@ export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promi
   y -= sh + 4;
   page.drawLine({ start: { x: M, y }, end: { x: M + 300, y }, thickness: 0.8, color: ink });
   y -= 14;
-  write(`Signature of ${d.kind === "adult" ? "Adult Participant" : "Natural Guardian"}: ${d.signer.name}${d.trampoline ? " (water sports release and trampoline release)" : ""}`, { size: 9, color: soft, gap: 16 });
-  write("The signer confirmed: \"I have read this entire agreement, initialed each section, understand that I am giving up legal rights, and agree to be bound by it.\"", { size: 9, gap: 6 });
-  write("The signer agreed to sign electronically and that this electronic signature has the same effect as a handwritten signature (Florida Uniform Electronic Transaction Act, Fla. Stat. 668.50; federal E-SIGN Act).", { size: 9, gap: 6 });
+  const role = d.kind === "adult" ? "Adult Participant" : d.kind === "minor" ? "Natural Guardian" : "Adult Participant and Natural Guardian";
+  write(`Signature of ${role}: ${d.signer.name}`, { size: 9, color: soft, gap: 10 });
+  const docs = [
+    d.kind !== "minor" ? "the Unconditional General Release from Liability – Adult (18+), for myself" : null,
+    d.kind !== "adult" ? `the Limited Release from Liability – Minor Children, as natural guardian of ${d.minors.map((m) => m.name).join(", ")}` : null,
+    d.trampoline ? `the Trampoline Release of Liability Form${d.kind === "adult" ? "" : ", for myself and as natural guardian of the child(ren) named above"}` : null,
+  ].filter(Boolean).join("; and ");
+  write(`This one electronic signature executes: ${docs}.`, { size: 9, gap: 6 });
+  write("The signer confirmed: \"I have read the entire agreement(s) above, initialed each section, understand that I am giving up legal rights, and agree to be bound.\"", { size: 9, gap: 6 });
+  write("The signer agreed to conduct this transaction electronically and that this electronic signature has the same legal effect as a handwritten signature (Fla. Stat. 668.50(5)(b) and (7)(a); 15 U.S.C. 7001).", { size: 9, gap: 6 });
   write("O'Town Watersports records the server time, IP address, device and a SHA-256 fingerprint of this file when it is received.", { size: 8, color: soft });
   return doc.save();
 }

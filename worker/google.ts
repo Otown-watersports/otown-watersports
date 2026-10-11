@@ -107,6 +107,8 @@ export async function gmailSend(env: GoogleEnv, cfg: GoogleConfig, o: { to: stri
     `To: ${o.to}`,
     ...(o.replyTo ? [`Reply-To: ${o.replyTo}`] : []),
     `Subject: =?UTF-8?B?${utf8b64(o.subject)}?=`,
+    // lets a Gmail filter file these automatically (filter: "has the words: X-OTown-Waiver" or subject starts with [Waiver])
+    "X-OTown-Waiver: signed",
     "MIME-Version: 1.0",
     `Content-Type: multipart/mixed; boundary="${boundary}"`,
     "",

@@ -222,7 +222,7 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
       google
         ? gmailSend(env, google, { to, replyTo, subject, html, filename, pdfB64: b64, from: env.WAIVER_FROM })
         : sendEmail(env, to, subject, html, filename, b64, replyTo);
-    emailed = await send(owner, `Signed waiver${s.trampoline ? " + trampoline release" : ""}: ${who}`, ownerHtml, s.signer.email).catch(() => false);
+    emailed = await send(owner, `[Waiver] ${who}${s.trampoline ? " (+ trampoline)" : ""} · ${day}`, ownerHtml, s.signer.email).catch(() => false);
     await send(s.signer.email, "Your signed O'Town Watersports waiver", riderHtml).catch(() => false);
   }
   if (!stored && !emailed && !drive) return json({ error: "We couldn't save your waiver. Please try again, or download and print it." }, 502);
