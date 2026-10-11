@@ -19,6 +19,8 @@ const safe = (s: string) =>
   s.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, "-").replace(/…/g, "...")
    .replace(/[^\x20-\x7E\xA0-\xFF\u2022]/g, "?");
 
+const prettyDob = (v: string) => { const d = new Date(`${v}T12:00:00Z`); return Number.isNaN(d.getTime()) ? v : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }); };
+
 export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promise<Uint8Array> {
   const { PDFDocument, StandardFonts, rgb } = await import("pdf-lib");
   const doc = await PDFDocument.create();
@@ -55,7 +57,9 @@ export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promi
     y -= o.gap ?? 5;
   };
 
-  write("O'TOWN WATERSPORTS  ·  SIGNED ONLINE", { f: bold, size: 8, color: cyan, gap: 10 });
+  const riders = d.kind === "adult" ? [d.signer.name] : d.kind === "minor" ? d.minors.map((m) => m.name) : [d.signer.name, ...d.minors.map((m) => m.name)];
+  write("O'TOWN WATERSPORTS  ·  SIGNED ONLINE", { f: bold, size: 8, color: cyan, gap: 4 });
+  write(`Participant${riders.length > 1 ? "s" : ""}: ${riders.join(", ")}${d.kind === "adult" ? "" : `   |   Signed by: ${d.signer.name}${d.kind === "minor" ? " (parent / natural guardian)" : ""}`}`, { f: bold, size: 8.5, gap: 10 });
   const pages = [...(d.kind === "adult" ? [WAIVER_PAGES[0]] : WAIVER_PAGES), ...(d.trampoline ? [{ title: [TRAMPOLINE_TITLE], blocks: TRAMPOLINE_BLOCKS }] : [])];
   pages.forEach((p, pi) => {
     if (pi > 0) { page = doc.addPage([W, H]); y = H - M; }
@@ -81,10 +85,10 @@ export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promi
   write("SIGNATURE AND PARTICIPANTS", { f: bold, size: 12, gap: 10 });
   const rows: [string, string][] = [
     ["Signed by", `${d.signer.name}${d.kind === "adult" ? " (adult participant)" : d.kind === "minor" ? " (natural guardian)" : " (adult participant and natural guardian)"}`],
-    ...(d.signer.dob ? [["Date of birth", d.signer.dob] as [string, string]] : []),
+    ...(d.signer.dob ? [["Date of birth", prettyDob(d.signer.dob)] as [string, string]] : []),
     ["Phone", d.signer.phone],
     ["Email", d.signer.email],
-    ...d.minors.map((m, i) => [`Minor child ${i + 1}`, `${m.name}, born ${m.dob}`] as [string, string]),
+    ...d.minors.map((m, i) => [`Minor child ${i + 1}`, `${m.name}, born ${prettyDob(m.dob)}`] as [string, string]),
     ["Emergency contact", d.emergency.name ? `${d.emergency.name}, ${d.emergency.phone}` : "not provided"],
     ["Signed on", new Date(d.signedAt).toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "long", timeStyle: "short" }) + " (Eastern)"],
     ["Documents", d.trampoline ? `Water sports release + trampoline release` : "Water sports release"],
@@ -116,5 +120,16 @@ export async function buildWaiverPdf(d: WaiverData, signaturePng: string): Promi
   write("The signer confirmed: \"I have read the entire agreement(s) above, initialed each section, understand that I am giving up legal rights, and agree to be bound.\"", { size: 9, gap: 6 });
   write("The signer agreed to conduct this transaction electronically and that this electronic signature has the same legal effect as a handwritten signature (Fla. Stat. 668.50(5)(b) and (7)(a); 15 U.S.C. 7001).", { size: 9, gap: 6 });
   write("O'Town Watersports records the server time, IP address, device and a SHA-256 fingerprint of this file when it is received.", { size: 8, color: soft });
+  // every page names who this is for, so no page can be separated from its signer
+  const all = doc.getPages();
+  const tag = safe(`${riders.join(", ")}${d.kind === "adult" ? "" : ` (signed by ${d.signer.name})`}`);
+  all.forEach((pg, i) => {
+    const label = `Page ${i + 1} of ${all.length}`;
+    pg.drawLine({ start: { x: M, y: 38 }, end: { x: W - M, y: 38 }, thickness: 0.4, color: rgb(0.8, 0.8, 0.8) });
+    let t = tag; const room = LW - font.widthOfTextAtSize(label, 7.5) - 24;
+    while (t.length > 4 && font.widthOfTextAtSize(`O'Town Watersports waiver  |  ${t}`, 7.5) > room) t = t.slice(0, -2);
+    pg.drawText(`O'Town Watersports waiver  |  ${t === tag ? t : `${t}...`}`, { x: M, y: 26, size: 7.5, font, color: soft });
+    pg.drawText(label, { x: W - M - font.widthOfTextAtSize(label, 7.5), y: 26, size: 7.5, font, color: soft });
+  });
   return doc.save();
 }
