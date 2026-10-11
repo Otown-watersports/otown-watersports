@@ -6,7 +6,7 @@ import { contact } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Waiver | O’Town Watersports Orlando",
-  description: "Sign the O’Town Watersports release online in about 3 minutes: adult waiver, the limited release for minor children, and the optional trampoline release.",
+  description: "Sign the O’Town Watersports release online in about 3 minutes: one signature covers the water sports release and the trampoline release, for adults and minor children.",
   alternates: { canonical: "/waiver" },
 };
 
@@ -20,7 +20,7 @@ export default function WaiverPage() {
             <h1 className="display display--lg">The waiver.</h1>
           </div>
           <div className="wv-intro__side">
-            <p>Every rider signs before riding. Under 18? A parent signs. Takes about 3 minutes online; you both get the PDF by email.</p>
+            <p>Everyone signs before riding or jumping on the trampoline. Under 18? A parent signs. Takes about 3 minutes online; you both get the PDF by email.</p>
             <div className="actions">
               <a className="btn btn--primary btn--pill" href="#sign">Sign online <span aria-hidden>→</span></a>
               <a className="btn btn--outline-light btn--pill" href="/docs/otown-waiver.pdf" download="OTown-Watersports-Waiver.pdf">Download PDF <span aria-hidden>↓</span></a>

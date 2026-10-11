@@ -84,7 +84,8 @@ function validate(raw: unknown): { ok: true; s: Submission } | { ok: false; erro
   }
   const emergency = { name: titleCase(clean(r.emergency?.name)), phone: clean(r.emergency?.phone, 40) };
   if ((emergency.name || emergency.phone) && (emergency.name.length < 2 || emergency.phone.replace(/\D/g, "").length < 7)) return { ok: false, error: "Emergency contact needs both a name and a phone number." };
-  const trampoline = r.trampoline === true;
+  // trampoline release is mandatory for everyone (it is the first thing kids reach on the dock)
+  const trampoline = true;
   const need = [...(kind === "adult" ? ["A", "B", "C", "D"] : ["A", "B", "C", "D", "M"]), ...(trampoline ? ["T"] : [])];
   const initials: Record<string, string> = {};
   for (const k of need) {

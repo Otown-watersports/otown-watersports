@@ -158,7 +158,7 @@ export const WAIVER_PAGES: WaiverPage[] = [
   }
 ];
 
-/** Trampoline release (optional add-on). Text verbatim from O'Town's "Trampoline Release of Liability Form". */
+/** Trampoline release (signed by everyone, together with the water sports release). Text verbatim from O'Town's "Trampoline Release of Liability Form". */
 export const TRAMPOLINE_VERSION = "2026-10 (trampoline release)";
 export const TRAMPOLINE_TITLE = "TRAMPOLINE RELEASE OF LIABILITY FORM";
 export const TRAMPOLINE_BLOCKS: WaiverBlock[] = [

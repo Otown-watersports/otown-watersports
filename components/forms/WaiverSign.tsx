@@ -103,7 +103,8 @@ export default function WaiverSign() {
   const [signer, setSigner] = useState({ name: "", dob: "", phone: "", email: "" });
   const [minors, setMinors] = useState<Minor[]>([{ name: "", dob: "" }]);
   const [emergency, setEmergency] = useState({ name: "", phone: "" });
-  const [trampoline, setTrampoline] = useState(false);
+  // the trampoline is on the dock and kids jump on it first, so its release is part of every signing
+  const trampoline = true;
   const [initials, setInitials] = useState<Record<string, string>>({});
   const [sig, setSig] = useState<string | null>(null);
   const [agree, setAgree] = useState(false);
@@ -118,12 +119,12 @@ export default function WaiverSign() {
   useEffect(() => {
     try {
       const d = JSON.parse(sessionStorage.getItem(DRAFT) || "null");
-      if (d) { setKind(d.kind); setSigner(d.signer); setMinors(d.minors); setEmergency(d.emergency); setInitials(d.initials); setTrampoline(!!d.trampoline); }
+      if (d) { setKind(d.kind); setSigner(d.signer); setMinors(d.minors); setEmergency(d.emergency); setInitials(d.initials); }
     } catch {}
   }, []);
   useEffect(() => {
-    try { sessionStorage.setItem(DRAFT, JSON.stringify({ kind, signer, minors, emergency, initials, trampoline })); } catch {}
-  }, [kind, signer, minors, emergency, initials, trampoline]);
+    try { sessionStorage.setItem(DRAFT, JSON.stringify({ kind, signer, minors, emergency, initials })); } catch {}
+  }, [kind, signer, minors, emergency, initials]);
 
   useEffect(() => {
     fetch("/api/waiver").then((r) => r.json()).then((j) => setReady(!!j.ready)).catch(() => setReady(false));
@@ -224,10 +225,9 @@ export default function WaiverSign() {
           </div>
         </fieldset>
 
-        <label className="ws__check ws__check--card">
-          <input type="checkbox" checked={trampoline} onChange={(e) => setTrampoline(e.target.checked)} />
-          <span><b>Also sign the trampoline release</b> (optional). For the trampoline on the dock, valid 5 years. One extra section to initial.</span>
-        </label>
+        <p className="ws__check ws__check--card">
+          <span><b>Covers the water and the trampoline.</b> The trampoline on the dock is part of every visit, so one signature covers both releases.</span>
+        </p>
 
         <div className="inquiry__grid">
           <label className="field"><span>{kind === "adult" ? "Your full name" : kind === "minor" ? "Parent / guardian full name" : "Your full name (parent / guardian)"}</span>
