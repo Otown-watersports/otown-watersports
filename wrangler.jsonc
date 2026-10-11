@@ -14,7 +14,10 @@
   // signed waivers are emailed to the connected Google account; set WAIVER_TO to override
   "triggers": { "crons": ["0 7 1 * *"] },
   // signed waivers (auto-deleted after 3 years by the bucket's lifecycle rule)
-  "r2_buckets": [{ "binding": "WAIVERS", "bucket_name": "otown-waivers" }]
+  "r2_buckets": [{ "binding": "WAIVERS", "bucket_name": "otown-waivers" }],
+  // Plain-text settings live here so a deploy never wipes them (dashboard "text" variables are replaced on each deploy).
+  // Emails go out from info@ (a "Send mail as" alias of the connected hello@ account) and the owner copy lands in info@.
+  "vars": { "WAIVER_FROM": "O'Town Watersports <info@otownwatersports.com>", "WAIVER_TO": "info@otownwatersports.com" }
   // Secrets (Cloudflare > Workers > otown-watersports > Settings > Variables and secrets):
   // GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, ADMIN_KEY; then open /api/google/connect?key=ADMIN_KEY once
 }

@@ -199,6 +199,7 @@ export default function WaiverSign() {
           <p className="eyebrow eyebrow--cyan">Signed</p>
           <h2 className="display display--md" tabIndex={-1}>You’re all set.</h2>
           <p>Your signed waiver has been sent to O’Town Watersports and a copy is on its way to {signer.email}.</p>
+          <p className="wv-done__note">Don’t see it in a few minutes? Check your spam or junk folder and mark it “Not spam” so you get our emails.</p>
           {pdfUrl && <a className="btn btn--primary btn--pill" href={pdfUrl.url} download={pdfUrl.name}>Download your signed waiver <span aria-hidden>↓</span></a>}
         </div>
       </section>
