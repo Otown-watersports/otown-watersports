@@ -72,7 +72,7 @@ export const riderBios: Record<string, RiderBio> = {
   blaze: {
     more: ["Rides a Liquid Force board; trains with Glen at O’Town."],
     bio: [
-      "Blaze Poss is one of the youngest riders on the O’Town dock, and already a world champion: he won Junior Boys at the 2025 WWA Wakeboard World Championships.",
+      "Blaze Poss is one of the youngest riders on the O’Town dock, and already a world and national champion: in 2025 he won Junior Boys at both the WWA Wakeboard World Championships and the Nautique WWA Wakeboard National Championships in Grand Junction, Colorado.",
       "In 2026 he won the first two stops of Performance Ski & Surf’s Gravel Tour in Orlando, going two for two to start the season.",
     ],
     sources: [

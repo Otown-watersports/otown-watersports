@@ -51,6 +51,7 @@ export const riderResults: Record<string, Result[]> = {
   ],
   blaze: [
     { year: "2025", text: "Won the WWA World Championship in Junior Boys", source: "https://www.instagram.com/blazewake/" },
+    { year: "2025", text: "Won the Nautique WWA U.S. National Championship in Junior Boys, Grand Junction, CO", source: "https://www.instagram.com/blazewake/" },
     { year: "2026", text: "Won Stop 2 of the Gravel Tour, Orlando", source: "https://www.instagram.com/blazewake/" },
     { year: "2026", text: "Won Stop 1 of the Gravel Tour, Orlando", source: "https://www.instagram.com/blazewake/" },
   ],

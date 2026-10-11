@@ -133,7 +133,7 @@ export const riders: Rider[] = [
     points: ["2023 Junior Pro Women World Champion."],
     photo: "/athletes/ashley-ig.jpg", cardPhoto: "/athletes/ashley-ig-4x5.jpg", photoAlt: "Ashley Kazmer grabbing her board high above the wake, in a clip shared with Glen Fletcher", photoPosition: "50% 30%" },
   { key: "blaze", name: "Blaze Poss", country: "USA", title: "Junior wakeboarder", instagram: "blazewake",
-    points: ["2025 WWA World Champion, Junior Boys.", "Won Stops 1 and 2 of the 2026 Gravel Tour, Orlando."],
+    points: ["2025 WWA World Champion, Junior Boys.", "2025 WWA U.S. National Champion, Junior Boys.", "Won Stops 1 and 2 of the 2026 Gravel Tour, Orlando."],
     photo: "/athletes/blaze.jpg", cardPhoto: "/athletes/blaze-4x5.jpg", photoAlt: "Blaze Poss on the podium with his trophy and board after winning Stop 2 of the 2026 Gravel Tour", photoPosition: "50% 30%" },
   { key: "fernanda", name: "Fernanda Larios", country: "Mexico", title: "Pro wakeboarder", photo: "/athletes/fernanda-hd.jpg", cardPhoto: "/athletes/fernanda-4x5.jpg", photoAlt: "Fernanda Larios carving behind the boat", photoPosition: "50% 40%",
     points: ["Silver at the 2025 Junior Pan American Games.", "4th at the 2023 Pan American Games."] },
