@@ -214,7 +214,7 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
       <p style="margin:0 0 14px"><b>Before your session</b></p>
       <ul style="margin:0 0 18px;padding-left:20px;line-height:1.7">
         <li>Be on the dock with your equipment on at your start time. Lessons run rain or shine.</li>
-        <li>Lake Barton, Orlando: directions and parking are on <a href="https://otownwatersports.com/plan" style="color:#0b7a95">otownwatersports.com/plan</a>.</li>
+        <li>Lake Barton, Orlando: directions and parking are on <a href="https://otownwatersports.com/plan#visit" style="color:#0b7a95">otownwatersports.com/plan</a>.</li>
         <li>Questions or need to reschedule? Call <a href="tel:+14075297727" style="color:#0b7a95">407 529 7727</a>.</li>
       </ul>
       <p style="margin:0">See you on the water!<br><b>Glen &amp; the O'Town Watersports team</b></p>`);

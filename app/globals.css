@@ -544,7 +544,7 @@ a:hover > .flip .flip__b, a:focus-visible > .flip .flip__b { transform: translat
 
 /* ---------- Plan page ---------- */
 .plan--page { padding-top: calc(var(--header-h) + clamp(56px, 7vw, 100px)); }
-.visit { padding: var(--section) 0; }
+.visit { padding: var(--section) 0; scroll-margin-top: var(--header-h, 64px); }
 .visit__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px 80px; align-items: stretch; }
 .visit__info dl { display: grid; gap: 22px; margin: 28px 0 34px; }
 .visit__info dt { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--text-soft); margin-bottom: 4px; }
