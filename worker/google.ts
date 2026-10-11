@@ -99,32 +99,38 @@ const utf8b64 = (s: string) => btoa(String.fromCharCode(...new TextEncoder().enc
 const wrap76 = (s: string) => s.replace(/.{1,76}/g, "$&\r\n");
 
 /** Send an email with the PDF attached through the connected Gmail account. */
-export async function gmailSend(env: GoogleEnv, cfg: GoogleConfig, o: { to: string; replyTo?: string; subject: string; html: string; filename: string; pdfB64: string; from?: string }) {
+export async function gmailSend(env: GoogleEnv, cfg: GoogleConfig, o: { to: string; replyTo?: string; subject: string; html: string; filename?: string; pdfB64?: string; from?: string; tag?: string }) {
   const boundary = `b_${crypto.randomUUID()}`;
-  const mime = [
+  const head = [
     // WAIVER_FROM may name an alias of the connected account (e.g. info@); Gmail accepts it once "Send mail as" is set up
     `From: ${o.from || `O'Town Watersports <${cfg.email}>`}`,
     `To: ${o.to}`,
     ...(o.replyTo ? [`Reply-To: ${o.replyTo}`] : []),
     `Subject: =?UTF-8?B?${utf8b64(o.subject)}?=`,
     // lets a Gmail filter file these automatically (filter: "has the words: X-OTown-Waiver" or subject starts with [Waiver])
-    "X-OTown-Waiver: signed",
+    o.tag || "X-OTown-Waiver: signed",
     "MIME-Version: 1.0",
-    `Content-Type: multipart/mixed; boundary="${boundary}"`,
-    "",
-    `--${boundary}`,
-    "Content-Type: text/html; charset=UTF-8",
-    "Content-Transfer-Encoding: base64",
-    "",
-    wrap76(utf8b64(o.html)),
-    `--${boundary}`,
-    `Content-Type: application/pdf; name="${o.filename}"`,
-    `Content-Disposition: attachment; filename="${o.filename}"`,
-    "Content-Transfer-Encoding: base64",
-    "",
-    wrap76(o.pdfB64),
-    `--${boundary}--`,
-  ].join("\r\n");
+  ];
+  const mime = (o.pdfB64 && o.filename
+    ? [
+        ...head,
+        `Content-Type: multipart/mixed; boundary="${boundary}"`,
+        "",
+        `--${boundary}`,
+        "Content-Type: text/html; charset=UTF-8",
+        "Content-Transfer-Encoding: base64",
+        "",
+        wrap76(utf8b64(o.html)),
+        `--${boundary}`,
+        `Content-Type: application/pdf; name="${o.filename}"`,
+        `Content-Disposition: attachment; filename="${o.filename}"`,
+        "Content-Transfer-Encoding: base64",
+        "",
+        wrap76(o.pdfB64),
+        `--${boundary}--`,
+      ]
+    : [...head, "Content-Type: text/html; charset=UTF-8", "Content-Transfer-Encoding: base64", "", wrap76(utf8b64(o.html))]
+  ).join("\r\n");
   const r = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
     method: "POST",
     headers: { Authorization: `Bearer ${await accessToken(env, cfg)}`, "content-type": "application/json" },

@@ -1,6 +1,6 @@
 /**
  * O'Town Watersports Worker.
- * Serves the static site (./out) and handles one API route: POST /api/waiver (online waiver signing).
+ * Serves the static site (./out) and handles: POST /api/waiver (online waiver signing) and POST /api/inquiry (plan-your-session form).
  *
  * The signed PDF is built in the rider's browser (no CPU limits there). This Worker:
  *  1. checks the submission (required fields, ages, initials, signature, size),
@@ -107,7 +107,7 @@ function toBase64(buf: ArrayBuffer) {
   return btoa(s);
 }
 
-async function sendEmail(env: Env, to: string, subject: string, html: string, filename: string, pdfB64: string, replyTo?: string) {
+async function sendEmail(env: Env, to: string, subject: string, html: string, filename?: string, pdfB64?: string, replyTo?: string) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
@@ -117,7 +117,7 @@ async function sendEmail(env: Env, to: string, subject: string, html: string, fi
       reply_to: replyTo,
       subject,
       html,
-      attachments: [{ filename, content: pdfB64 }],
+      ...(filename && pdfB64 ? { attachments: [{ filename, content: pdfB64 }] } : {}),
     }),
   });
   return res.ok;
@@ -230,10 +230,43 @@ async function handleWaiver(req: Request, env: Env): Promise<Response> {
   return json({ ok: true, id, filename });
 }
 
+const ACTIVITIES: Record<string, string> = { "first-session": "First session", coaching: "Coaching", wakesurf: "Wakesurf", "training-stay": "Training stay", other: "Group / other" };
+const LEVELS = ["Never ridden", "Beginner", "Intermediate", "Advanced", "Pro"];
+
+/** POST /api/inquiry: the "Plan your session" form. Emails O'Town (reply-to = the visitor) so it never depends on the visitor's mail app. */
+async function handleInquiry(req: Request, env: Env): Promise<Response> {
+  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
+  const google = env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET ? await getConfig(env) : null;
+  if (!google && !env.RESEND_API_KEY) return json({ error: "unavailable" }, 503);
+  let r: Record<string, unknown>;
+  try { r = (await req.json()) as Record<string, unknown>; } catch { return json({ error: "Invalid form." }, 400); }
+  if (r.website) return json({ ok: true }); // honeypot: bots see success, nothing is sent
+  const name = titleCase(clean(r.name, 80));
+  const email = clean(r.email, 120).toLowerCase();
+  const dates = clean(r.dates, 160);
+  const message = typeof r.message === "string" ? r.message.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, " ").trim().slice(0, 2000) : "";
+  const activity = ACTIVITIES[clean(r.activity, 30)] ?? "First session";
+  const level = LEVELS.includes(clean(r.level, 20)) ? clean(r.level, 20) : "Beginner";
+  if (name.length < 2 || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]{2,}$/.test(email) || dates.length < 2) return json({ error: "Please add your name, a valid email and your preferred dates." }, 400);
+  const urlish = (message.match(/https?:\/\//gi) ?? []).length;
+  if (urlish > 2) return json({ ok: true }); // link-stuffed message: almost certainly spam
+  const rows: [string, string][] = [["Name", name], ["Email", email], ["Interested in", activity], ["Riding level", level], ["Preferred dates", dates]];
+  const table = `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;font-size:14px">${rows.map(([k, v], i) => `<tr><td style="padding:8px 10px;color:#667;background:${i % 2 ? "#fff" : "#f4f2ee"};vertical-align:top;width:34%">${esc(k)}</td><td style="padding:8px 10px;background:${i % 2 ? "#fff" : "#f4f2ee"};word-break:break-word"><b>${esc(v)}</b></td></tr>`).join("")}</table>`;
+  const note = message ? `<p style="margin:18px 0 6px;color:#667;font-size:13px">What they'd like to work on</p><p style="margin:0;white-space:pre-wrap;word-break:break-word">${esc(message)}</p>` : "";
+  const html = layout(`${esc(name)} wants to plan a session`, `<p style="margin:0 0 16px">New inquiry from the website. Just hit <b>Reply</b> to answer ${esc(name.split(" ")[0])} directly.</p>${table}${note}`);
+  const owner = env.WAIVER_TO || env.WAIVER_FROM?.match(/<([^>]+)>/)?.[1] || env.WAIVER_FROM || google?.email || "info@otownwatersports.com";
+  const subject = `[Inquiry] ${name} · ${activity} · ${dates.slice(0, 40)}`;
+  const ok = google
+    ? await gmailSend(env, google, { to: owner, replyTo: email, subject, html, from: env.WAIVER_FROM, tag: "X-OTown-Inquiry: new" }).catch(() => false)
+    : await sendEmail(env, owner, subject, html, undefined, undefined, email).catch(() => false);
+  return ok ? json({ ok: true }) : json({ error: "unavailable" }, 502);
+}
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
     if (url.pathname === "/api/waiver") return handleWaiver(req, env);
+    if (url.pathname === "/api/inquiry") return handleInquiry(req, env);
     if (url.pathname.startsWith("/api/google/")) return handleGoogle(req, env);
     return env.ASSETS.fetch(req);
   },
