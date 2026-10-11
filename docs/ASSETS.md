@@ -47,7 +47,7 @@ Every image and video on the site, its source, where it is used, and publication
 | meagan-air.jpg, meagan-portrait.jpg | Red Bull athlete page, img.redbull.com (Red Bull Content Pool) |
 | jamie.jpg, jamie-card.jpg | Red Bull (rail world record article, athlete portrait) |
 | kira.jpg | Wakeboarding Mag (WKB0821-Kiratwo) |
-| kitt.jpg | Centurion Boats team page |
+| blaze.jpg, blaze-4x5.jpg | @blazewake Instagram (Gravel Tour 2026 Stop 2 podium), banner text removed |
 | steel-air.jpg | steellafferty.com |
 | hina.jpg | Wakeboarding Mag interview, Jan 2022 |
 | campbell.jpg | USA Water Ski & Wake Sports news (USOPC Cloudinary) |

@@ -49,10 +49,10 @@ export const riderResults: Record<string, Result[]> = {
     { year: "2023", text: "Won the WWA U.S. National Championship in Junior Men", source: "https://www.thewwa.com/2023-nautique-wwa-national-championships-presented-by-gm-marine-wrap-up-in-pine-mountain-georgia/" },
     { year: "2026", text: "Finished 6th overall in Pro Men on the Pro Wakeboard Tour", source: PWT26 },
   ],
-  kitt: [
-    { year: "2025", text: "Won gold in women’s wakeboard at the Junior Pan American Games", source: "https://en.wikipedia.org/wiki/Water_skiing_at_the_2025_Junior_Pan_American_Games" },
-    { year: "2022", text: "Won the WWA U.S. National Championship in Junior Pro Women", source: WWA22N },
-    { year: "2026", text: "Finished 9th overall in Pro Women on the Pro Wakeboard Tour", source: PWT26 },
+  blaze: [
+    { year: "2025", text: "Won the WWA World Championship in Junior Boys", source: "https://www.instagram.com/blazewake/" },
+    { year: "2026", text: "Won Stop 2 of the Gravel Tour, Orlando", source: "https://www.instagram.com/blazewake/" },
+    { year: "2026", text: "Won Stop 1 of the Gravel Tour, Orlando", source: "https://www.instagram.com/blazewake/" },
   ],
   kira: [
     { year: "2019", text: "Won the WWA World Championship in Junior Pro Women in Mexico", source: KIRA },

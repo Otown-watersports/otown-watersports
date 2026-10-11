@@ -69,16 +69,14 @@ export const riderBios: Record<string, RiderBio> = {
       { label: "Pro Wakeboard Tour results", url: "https://prowakeboardtour.com/2025-results/" },
     ],
   },
-  kitt: {
-    more: ["Three-time Pan Am Championships champion.", "Centurion team rider; coach and co-owner at Freedom Wake Park, Orlando."],
+  blaze: {
+    more: ["Rides a Liquid Force board; trains with Glen at O’Town."],
     bio: [
-      "Orlando-based Kitt Smith won gold in women’s wakeboard at the 2025 Junior Pan American Games, and was the 2022 WWA U.S. National Champion in Junior Pro Women.",
-      "She is a Centurion team rider, and a coach and co-owner at Freedom Wake Park.",
+      "Blaze Poss is one of the youngest riders on the O’Town dock, and already a world champion: he won Junior Boys at the 2025 WWA Wakeboard World Championships.",
+      "In 2026 he won the first two stops of Performance Ski & Surf’s Gravel Tour in Orlando, going two for two to start the season.",
     ],
     sources: [
-      { label: "2025 Junior Pan American Games", url: "https://en.wikipedia.org/wiki/Water_skiing_at_the_2025_Junior_Pan_American_Games" },
-      { label: "WWA, 2022 Nationals", url: "https://www.thewwa.com/2022-national-champions-crowned-in-polk-county/" },
-      { label: "Centurion team page", url: "https://centurionboats.com/team/kitt-smith/" },
+      { label: "@blazewake on Instagram", url: "https://www.instagram.com/blazewake/" },
     ],
   },
   kira: {
