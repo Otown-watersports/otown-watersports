@@ -67,7 +67,6 @@ export default async function CardPage() {
             <li><a href={card.instagram} target="_blank" rel="noopener noreferrer"><Icon d={I.ig} /><span>Instagram</span></a></li>
             <li><a href="/card/otown-watersports.vcf" download="otown-watersports.vcf"><Icon d={I.user} /><span>Save Contact</span></a></li>
           </ul>
-          <p className="cd-hint">Save Contact downloads a .vcf — tap it to add O’Town to your contacts. If it doesn’t open in this app, open this page in Safari or Chrome.</p>
 
           <CardShare url={card.cardUrl} title={card.share.title} text={card.share.text} qrSvg={qrSvg} />
 
