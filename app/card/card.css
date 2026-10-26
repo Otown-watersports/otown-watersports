@@ -63,3 +63,7 @@ body:has(.cd-root) main { padding: 0 !important; }
 @keyframes cd-rise { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
 @keyframes cd-sheet { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
 @media (prefers-reduced-motion: reduce) { .cd-root *, .cd-sheet, .cd-sheet * { animation: none !important; transition: none !important; } }
+
+.cd-sharerow { display: flex; justify-content: center; gap: 8px; margin-top: 18px; }
+.cd-sharerow .cd-share { margin: 0; }
+.cd-share--qr { color: var(--cd-mut); }

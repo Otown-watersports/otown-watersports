@@ -10,6 +10,18 @@ export default function CardShare({ url, title, text, qrSvg }: Props) {
   useEffect(() => { setCanShare(typeof navigator !== "undefined" && typeof navigator.share === "function"); }, []);
 
   const open = () => { setStatus(""); ref.current?.showModal(); };
+  // Direct user tap -> native share sheet when available; otherwise the dialog with Copy Link + QR.
+  const onShare = async () => {
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share({ title, text, url });
+        return;
+      } catch (e) {
+        if ((e as DOMException)?.name === "AbortError") return; // user closed the sheet
+      }
+    }
+    open();
+  };
   const close = () => ref.current?.close();
 
   const copy = async () => {
@@ -26,10 +38,13 @@ export default function CardShare({ url, title, text, qrSvg }: Props) {
 
   return (
     <>
-      <button type="button" className="cd-share" onClick={open} aria-haspopup="dialog">
+      <div className="cd-sharerow">
+      <button type="button" className="cd-share" onClick={onShare}>
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z" fill="none" stroke="currentColor" strokeWidth="1.8" /></svg>
         Share O’Town
       </button>
+      {canShare && <button type="button" className="cd-share cd-share--qr" onClick={open} aria-haspopup="dialog">QR code</button>}
+      </div>
       <dialog ref={ref} className="cd-sheet" aria-labelledby="cd-sheet-title" onClick={(e) => { if (e.target === ref.current) close(); }}>
         <div className="cd-sheet__body">
           <button type="button" className="cd-sheet__x" onClick={close} aria-label="Close share dialog">

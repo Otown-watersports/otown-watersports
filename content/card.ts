@@ -31,7 +31,7 @@ export const card = {
   maps: contact.directions,
   cardUrl: `${SITE}/card`,
   site: SITE,
-  share: { title: "O'Town Watersports", text: "Wakeboarding, wakesurfing & foiling in Orlando. See you on the water!" },
+  share: { title: "O'Town Watersports", text: "See you on the water! Wakeboarding, wakesurfing & foiling in Orlando." },
   /** Wallet is OFF until real Apple credentials exist as server secrets and a signed endpoint is deployed. See docs/WALLET.md */
   walletEnabled: false,
   walletPassUrl: "/api/wallet/pass",
