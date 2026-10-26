@@ -19,8 +19,8 @@ export const card = {
   email: contact.email,
   website: "https://www.otownwatersports.com",
   websiteLabel: "www.otownwatersports.com",
-  /** Booking destination. VERIFIED: the site's own session-planning/inquiry form (/plan). Change here if a dedicated booking system is added. */
-  bookingUrl: "/plan",
+  /** Booking button opens a text message to O'Town with a pre-filled note (owner request). Website form alternative: /plan */
+  bookingUrl: "sms:+14075297727?&body=Hi%20O%E2%80%99Town!%20I%E2%80%99d%20like%20to%20book%20a%20session.",
   instagram: contact.instagram.href,
   instagramHandle: contact.instagram.label,
   /** TikTok handle supplied by the owner. The URL follows TikTok's standard profile format but has NOT been opened/verified yet. */
