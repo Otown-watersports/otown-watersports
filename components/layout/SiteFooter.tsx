@@ -2,7 +2,7 @@ import Link from "next/link";
 import { contact } from "@/content/site";
 
 const pages = [
-  { label: "Coaching", href: "/coaching" },
+  { label: "Wakeboard & wakesurf lessons", href: "/coaching" },
   { label: "Rates", href: "/rates" },
   { label: "Athletes", href: "/athletes" },
   { label: "Stay at O’Town", href: "/stay" },

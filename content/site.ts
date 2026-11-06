@@ -267,3 +267,19 @@ export const rates = {
     },
   ],
 };
+
+/** Visible on /coaching and reused in its FAQ structured data. */
+export const lessonFaqs = [
+  { q: "Where can I take boat wakeboarding lessons in Orlando?", a: "O’Town Watersports offers private wakeboard lessons with Glen Fletcher on Lake Barton at 5220 E Colonial Dr, Orlando, FL 32807. Sessions are one-to-one and by appointment." },
+  { q: "Is O’Town a cable park or a boat wakeboarding school?", a: "O’Town is a boat wakeboarding and wakesurfing school. You ride behind a Supra SL 450 on Lake Barton with coaching from Glen Fletcher." },
+  { q: "Can beginners learn to wakeboard at O’Town?", a: "Yes. Coaching is available from your first ride through advanced tricks. Sessions are built around your experience and goals, including learning to stand up and ride across the wake." },
+  { q: "Do you also offer wakesurf lessons?", a: "Yes. O’Town offers private wakesurf lessons as well as wakeboard coaching on Lake Barton in Orlando. Tell us which activity you want when you request a session." },
+  { q: "Can I combine coaching with an overnight stay?", a: "Yes. Camps and overnight stays at O’Town can be arranged around your training goals and dates. Contact the school for availability and a tailored price." },
+];
+
+/** Distinct lesson intents, displayed on the existing coaching page. */
+export const lessonOptions = [
+  { key: "beginner", title: "Beginner wakeboard lessons", body: "Your first time behind a boat? Start with getting up, finding your balance and riding across the wake. Glen builds your private session around your experience.", activity: "first-session" },
+  { key: "progression", title: "Advanced wakeboard coaching", body: "Work toward your next trick with one-to-one coaching on Lake Barton. On-water training, trampoline work and video review help connect technique with what you feel on the board.", activity: "coaching" },
+  { key: "wakesurf", title: "Private wakesurf lessons", body: "Learn to wakesurf or develop your riding behind the Supra SL 450 in Orlando. Tell us your level and preferred dates so we can plan a session around you.", activity: "wakesurf" },
+];

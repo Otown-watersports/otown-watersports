@@ -1,10 +1,10 @@
 # Old WordPress URLs -> new pages (301)
 /about/waiver /waiver 301
 /about/waiver/ /waiver 301
-/about/glen-fletcher-2 /#glen 301
-/about/glen-fletcher-2/ /#glen 301
-/about /#glen 301
-/about/ /#glen 301
+/about/glen-fletcher-2 /coaching 301
+/about/glen-fletcher-2/ /coaching 301
+/about /coaching 301
+/about/ /coaching 301
 /photos /#life 301
 /photos/ /#life 301
 /new-gallery /#life 301
@@ -77,3 +77,7 @@
 /category/* /athletes 301
 /wp-content/* / 301
 /wp-admin/* / 301
+# Legacy homepage and rider roster found in Search Console (November 2026)
+/index.php / 301
+/team-riders /athletes 301
+/team-riders/ /athletes 301
