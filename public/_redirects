@@ -77,3 +77,7 @@
 /category/* /athletes 301
 /wp-content/* / 301
 /wp-admin/* / 301
+# Legacy homepage and rider roster found in Search Console (November 2026)
+/index.php / 301
+/team-riders /athletes 301
+/team-riders/ /athletes 301
