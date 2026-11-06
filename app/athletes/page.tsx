@@ -26,7 +26,8 @@ export default function AthletesPage() {
       item: {
         "@type": "Person",
         name: r.name,
-        url: `${SITE}/athletes#${r.key}`,
+        "@id": `${SITE}/athletes/${r.key}#person`,
+        url: `${SITE}/athletes/${r.key}`,
         jobTitle: r.title,
         nationality: r.country,
         description: r.points.join(" "),

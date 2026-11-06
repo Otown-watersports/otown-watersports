@@ -29,7 +29,7 @@ export default async function Home() {
           <h2 className="display display--xl" data-reveal>Beginners welcomed.<br /><span className="accent">Pros challenged.</span></h2>
           <div className="statement__side" data-reveal>
             <p className="lede">
-              O’Town is a private coaching school on Lake Barton in downtown Orlando. One boat, one coach, one rider at a time: on the water, on the trampoline and in video review.
+              O’Town Watersports offers private boat wakeboarding and wakesurfing lessons on Lake Barton in Orlando, Florida. One boat, one coach, one rider at a time: on the water, on the trampoline and in video review.
             </p>
             <dl className="facts">
               <div><dt>20+</dt><dd>years of coaching</dd></div>

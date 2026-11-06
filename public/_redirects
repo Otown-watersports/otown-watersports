@@ -1,10 +1,10 @@
 # Old WordPress URLs -> new pages (301)
 /about/waiver /waiver 301
 /about/waiver/ /waiver 301
-/about/glen-fletcher-2 /#glen 301
-/about/glen-fletcher-2/ /#glen 301
-/about /#glen 301
-/about/ /#glen 301
+/about/glen-fletcher-2 /coaching 301
+/about/glen-fletcher-2/ /coaching 301
+/about /coaching 301
+/about/ /coaching 301
 /photos /#life 301
 /photos/ /#life 301
 /new-gallery /#life 301

@@ -2,24 +2,36 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import RiderSpotlight from "@/components/riders/RiderSpotlight";
-import { glen, method, riders } from "@/content/site";
+import Accordion from "@/components/ui/Accordion";
+import { glen, lessonFaqs, method, riders } from "@/content/site";
 
 export const metadata: Metadata = {
-  title: "Wakeboard Coaching with Glen Fletcher | O’Town Watersports Orlando",
-  description: "One-to-one wakeboard and wakesurf coaching with Glen Fletcher on Lake Barton, Orlando: on the water, on the trampoline and in video review.",
+  title: "Wakeboard & Wakesurf Lessons in Orlando | O’Town Watersports",
+  description: "Private boat wakeboard and wakesurf lessons in Orlando with Glen Fletcher. Learn on Lake Barton, from your first ride to advanced tricks. By appointment.",
+  openGraph: {
+    title: "Wakeboard & Wakesurf Lessons in Orlando | O’Town Watersports",
+    description: "Private boat coaching with Glen Fletcher on Lake Barton, for beginners through advanced riders.",
+    url: "/coaching",
+    type: "website",
+  },
   alternates: { canonical: "/coaching" },
 };
 
 export default function CoachingPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: lessonFaqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+      }).replace(/</g, "\\u003c") }} />
       <section className="page-hero">
         <Image className="only-desk" src="/images/glen-tower.jpg" alt="Glen at the wheel under the tower, Lake Barton" fill priority quality={85} sizes="100vw" style={{ objectPosition: "86% 72%" }} />
         <Image className="only-mob" src="/images/glen-helm.jpg" alt="" fill quality={85} sizes="100vw" style={{ objectPosition: "50% 18%" }} />
         <div className="wrap page-hero__inner">
-          <p className="eyebrow eyebrow--cyan">Coaching</p>
+          <p className="eyebrow eyebrow--cyan">Wakeboard &amp; wakesurf lessons · Orlando</p>
           <h1 className="display display--hero">Coached by Glen.</h1>
-          <p>Twenty-plus years behind the boat, with first-timers, juniors and world champions.</p>
+          <p>Private boat wakeboard and wakesurf lessons on Lake Barton, Orlando. From your first ride to advanced tricks, with Glen Fletcher.</p>
         </div>
       </section>
 
@@ -65,6 +77,19 @@ export default function CoachingPage() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="lessons-title">
+        <div className="wrap">
+          <div className="section-head section-head--row">
+            <div>
+              <p className="eyebrow eyebrow--dark">Plan your ride</p>
+              <h2 id="lessons-title" className="display display--lg display--ink">Wakeboarding lessons<br />in Orlando.</h2>
+            </div>
+            <p className="lede lede--narrow">Learn behind the boat on Lake Barton. Explore <Link href="/rates" className="u-link">lesson prices and session lengths</Link>, or plan a <Link href="/stay" className="u-link">training stay at O’Town</Link>.</p>
+          </div>
+          <Accordion items={lessonFaqs} />
         </div>
       </section>
 
