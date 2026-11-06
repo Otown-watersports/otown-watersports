@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import RiderSpotlight from "@/components/riders/RiderSpotlight";
 import Accordion from "@/components/ui/Accordion";
-import { glen, lessonFaqs, method, riders } from "@/content/site";
+import { glen, lessonFaqs, lessonOptions, method, rates, riders } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Wakeboard & Wakesurf Lessons in Orlando | O’Town Watersports",
@@ -77,6 +77,25 @@ export default function CoachingPage() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="lesson-options-title">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow eyebrow--dark">Private lessons · Lake Barton</p>
+            <h2 id="lesson-options-title" className="display display--lg display--ink">A session for<br />your level.</h2>
+          </div>
+          <ul className="method">
+            {lessonOptions.map((lesson) => (
+              <li key={lesson.key} className="method__item" id={lesson.key}>
+                <h3 className="method__title">{lesson.title}</h3>
+                <p>{lesson.body}</p>
+                <p style={{ marginTop: 20 }}><Link href={`/plan?activity=${lesson.activity}`} className="u-link">Request a {lesson.key === "wakesurf" ? "wakesurf" : "wakeboard"} lesson</Link></p>
+              </li>
+            ))}
+          </ul>
+          <p className="lede" style={{ marginTop: 32 }}>Private lesson: {rates.items[0].price} ({rates.items[0].unit}). Full day: {rates.items[1].price}, including two 45 minute sessions, trampoline training and video review. <Link href="/rates" className="u-link">See rates and booking policy</Link>.</p>
         </div>
       </section>
 

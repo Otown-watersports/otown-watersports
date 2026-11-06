@@ -17,10 +17,11 @@ export default function PlanPage() {
         <div className="wrap plan__grid">
           <div className="plan__intro">
             <p className="eyebrow eyebrow--cyan">Plan your session</p>
-            <h1 id="plan-title" className="display display--lg">What are you<br />working on?</h1>
-            <p className="plan__lede">Tell us your level, dates and what you’d like to do. We’ll help you plan your time on the water.</p>
+            <h1 id="plan-title" className="display display--lg">Request your<br />private lesson.</h1>
+            <p className="plan__lede">Wakeboard or wakesurf with Glen Fletcher on Lake Barton, Orlando. Tell us your level and preferred dates. We’ll reply to confirm availability; submitting this form does not confirm a booking.</p>
+            <p><Link href="/rates" className="u-link">View lesson prices and booking policy</Link></p>
             <div className="plan__direct">
-              <a href={contact.phone.href}>{contact.phone.label}</a>
+              <a href={contact.phone.href}>Call {contact.phone.label}</a>
               <a href={`mailto:${contact.email}`}>{contact.email}</a>
             </div>
           </div>
