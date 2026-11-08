@@ -270,16 +270,16 @@ export const rates = {
 
 /** Visible on /coaching and reused in its FAQ structured data. */
 export const lessonFaqs = [
-  { q: "Where can I take boat wakeboarding lessons in Orlando?", a: "O’Town Watersports offers private wakeboard lessons with Glen Fletcher on Lake Barton at 5220 E Colonial Dr, Orlando, FL 32807. Sessions are one-to-one and by appointment." },
-  { q: "Is O’Town a cable park or a boat wakeboarding school?", a: "O’Town is a boat wakeboarding and wakesurfing school. You ride behind a Supra SL 450 on Lake Barton with coaching from Glen Fletcher." },
-  { q: "Can beginners learn to wakeboard at O’Town?", a: "Yes. Coaching is available from your first ride through advanced tricks. Sessions are built around your experience and goals, including learning to stand up and ride across the wake." },
-  { q: "Do you also offer wakesurf lessons?", a: "Yes. O’Town offers private wakesurf lessons as well as wakeboard coaching on Lake Barton in Orlando. Tell us which activity you want when you request a session." },
-  { q: "Can I combine coaching with an overnight stay?", a: "Yes. Camps and overnight stays at O’Town can be arranged around your training goals and dates. Contact the school for availability and a tailored price." },
+  { q: "Where do we ride?", a: "On Lake Barton in Orlando, behind our Supra SL 450. Find O’Town at 5220 E Colonial Dr. Private sessions with Glen Fletcher are by appointment." },
+  { q: "Boat or cable?", a: "Boat only. Wakeboard or wakesurf with one-to-one coaching from Glen." },
+  { q: "Never ridden before?", a: "You’re welcome here. Start with getting up and finding your balance, at your own pace." },
+  { q: "Can I wakesurf?", a: "Yes. Choose wakesurf when you request your session—first-timers and experienced riders are welcome." },
+  { q: "Can I stay and train?", a: "Yes. Overnight stays and training camps can be arranged around your dates. Ask us about availability and pricing." },
 ];
 
-/** Distinct lesson intents, displayed on the existing coaching page. */
+/** Photo-led lesson choices on the coaching page. */
 export const lessonOptions = [
-  { key: "beginner", title: "Beginner wakeboard lessons", body: "Your first time behind a boat? Start with getting up, finding your balance and riding across the wake. Glen builds your private session around your experience.", activity: "first-session" },
-  { key: "progression", title: "Advanced wakeboard coaching", body: "Work toward your next trick with one-to-one coaching on Lake Barton. On-water training, trampoline work and video review help connect technique with what you feel on the board.", activity: "coaching" },
-  { key: "wakesurf", title: "Private wakesurf lessons", body: "Learn to wakesurf or develop your riding behind the Supra SL 450 in Orlando. Tell us your level and preferred dates so we can plan a session around you.", activity: "wakesurf" },
+  { key: "beginner", label: "Wakeboard · Beginner", title: "Your first ride.", body: "Get up, find your balance, feel the pull. Glen takes it from there.", activity: "first-session", image: "/images/new/dock-start-rope.jpg", alt: "A wakeboarder ready on the dock, with the Supra waiting on Lake Barton", position: "45% 65%" },
+  { key: "progression", label: "Wakeboard · Progression", title: "Your next trick.", body: "Dial in your technique. Work on the move you came here for.", activity: "coaching", image: "/images/big-air.jpg", alt: "A wakeboarder grabbing the board above the wake", position: "68% 45%" },
+  { key: "wakesurf", label: "Wakesurf · All levels", title: "Find your flow.", body: "Find the pocket, let go of the rope, make it your own.", activity: "wakesurf", image: "/images/sophia-wakesurf.jpg", alt: "A wakesurfer riding the wave without a rope", position: "50% 85%" },
 ];
