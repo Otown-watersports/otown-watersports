@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import RiderSpotlight from "@/components/riders/RiderSpotlight";
-import Accordion from "@/components/ui/Accordion";
+import styles from "./coaching.module.css";
 import { glen, lessonFaqs, lessonOptions, method, rates, riders } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -80,35 +80,51 @@ export default function CoachingPage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="lesson-options-title">
+      <section className={styles.sessions} aria-labelledby="lesson-options-title">
         <div className="wrap">
-          <div className="section-head">
-            <p className="eyebrow eyebrow--dark">Private lessons · Lake Barton</p>
-            <h2 id="lesson-options-title" className="display display--lg display--ink">A session for<br />your level.</h2>
+          <div className={styles.heading}>
+            <div>
+              <p className="eyebrow eyebrow--dark">Private lessons · Lake Barton</p>
+              <h2 id="lesson-options-title" className={styles.title}>Find your ride.</h2>
+            </div>
+            <p>First time or next trick.<br />We’ll meet you where you are.</p>
           </div>
-          <ul className="method">
+          <ul className={styles.cards}>
             {lessonOptions.map((lesson) => (
-              <li key={lesson.key} className="method__item" id={lesson.key}>
-                <h3 className="method__title">{lesson.title}</h3>
-                <p>{lesson.body}</p>
-                <p style={{ marginTop: 20 }}><Link href={`/plan?activity=${lesson.activity}`} className="u-link">Request a {lesson.key === "wakesurf" ? "wakesurf" : "wakeboard"} lesson</Link></p>
+              <li key={lesson.key} id={lesson.key}>
+                <Link href={`/plan?activity=${lesson.activity}`} className={styles.card}>
+                  <div className={styles.photo}>
+                    <Image src={lesson.image} alt={lesson.alt} fill quality={85} sizes="(max-width: 700px) 100vw, 33vw" style={{ objectPosition: lesson.position }} />
+                    <span className={styles.arrow} aria-hidden="true">↗</span>
+                  </div>
+                  <div className={styles.caption}>
+                    <p className={styles.label}>{lesson.label}</p>
+                    <h3>{lesson.title}</h3>
+                    <p className={styles.description}>{lesson.body}</p>
+                  </div>
+                </Link>
               </li>
             ))}
           </ul>
-          <p className="lede" style={{ marginTop: 32 }}>Private lesson: {rates.items[0].price} ({rates.items[0].unit}). Full day: {rates.items[1].price}, including two 45 minute sessions, trampoline training and video review. <Link href="/rates" className="u-link">See rates and booking policy</Link>.</p>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="lessons-title">
-        <div className="wrap">
-          <div className="section-head section-head--row">
-            <div>
-              <p className="eyebrow eyebrow--dark">Plan your ride</p>
-              <h2 id="lessons-title" className="display display--lg display--ink">Wakeboarding lessons<br />in Orlando.</h2>
+          <div className={styles.practical}>
+            <div className={styles.rate}>
+              <p className={styles.label}>Your time on the water</p>
+              <p><strong>{rates.items[0].price}</strong><span> / private set · 30 min</span></p>
+              <Link href="/rates" className="u-link">All rates &amp; full-day training ↗</Link>
             </div>
-            <p className="lede lede--narrow">Learn behind the boat on Lake Barton. Explore <Link href="/rates" className="u-link">lesson prices and session lengths</Link>, or plan a <Link href="/stay" className="u-link">training stay at O’Town</Link>.</p>
+            <details className={styles.faq}>
+              <summary>Before you ride<span className={styles.toggle} aria-hidden="true" /></summary>
+              <div className={styles.answers}>
+                {lessonFaqs.map((faq) => (
+                  <details key={faq.q} className={styles.question}>
+                    <summary>{faq.q}<span className={styles.toggle} aria-hidden="true" /></summary>
+                    <p>{faq.a}</p>
+                  </details>
+                ))}
+                <Link href="/stay" className="u-link">Explore a training stay ↗</Link>
+              </div>
+            </details>
           </div>
-          <Accordion items={lessonFaqs} />
         </div>
       </section>
 
